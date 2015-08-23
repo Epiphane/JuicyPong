@@ -1,20 +1,20 @@
 ﻿#pragma strict
 
-public static var GAME_HEIGHT : float = 5.3;
 public var speed : int = 10;
 public var player : int = 1;
+public var dy : float = 0;
 
 function Start () {
-	
 }
 
 function FixedUpdate () {
-	transform.position.y += Input.GetAxisRaw("P" + player + " Vertical") * Time.deltaTime * speed;
+	dy = Input.GetAxisRaw("P" + player + " Vertical") * speed;
+	transform.position.y += dy * Time.deltaTime;
 	
-	if (transform.position.y < -GAME_HEIGHT / 2) {
-		transform.position.y = -GAME_HEIGHT / 2;
+	if (transform.position.y < -Constants.FIELD_HEIGHT_2) {
+		transform.position.y = -Constants.FIELD_HEIGHT_2;
 	}
-	else if (transform.position.y > GAME_HEIGHT / 2) {
-		transform.position.y = GAME_HEIGHT / 2;
+	else if (transform.position.y > Constants.FIELD_HEIGHT_2) {
+		transform.position.y = Constants.FIELD_HEIGHT_2;
 	}
 }
