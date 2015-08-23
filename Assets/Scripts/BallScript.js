@@ -5,11 +5,17 @@ public static var GAME_WIDTH : float = 12;
 public var speed : int = 10;
 private var direction : Vector2;
 
+function NormalizeDirection () {
+	if (Mathf.Abs(direction.x) * 3 < Mathf.Abs(direction.y) *  2) {
+		direction.x = Mathf.Sign(direction.x) * 2 / 3 * Mathf.Abs(direction.y);
+	}
+
+	direction.Normalize();
+}
+
 function Start () {
 	direction = new Vector2(Random.value * 6 - 5, Random.value - 0.5);
-	direction.Normalize();
-	
-	Debug.Log(direction);
+	NormalizeDirection();
 }
 
 function FixedUpdate () {
@@ -37,4 +43,12 @@ function FixedUpdate () {
 
 function OnTriggerEnter2D (other : Collider2D) {
 	direction.x *= -1;
+	
+	var boxCollider : BoxCollider2D = other as BoxCollider2D;
+	if (boxCollider) {
+		var dy = transform.position.y - boxCollider.transform.position.y * 2 / boxCollider.size.y;
+		
+		direction.y += Mathf.Pow(dy, 5);
+		NormalizeDirection();
+	}
 }
