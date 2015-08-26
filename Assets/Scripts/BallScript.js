@@ -4,6 +4,8 @@ public var ScoreManager : ScoreManager;
 public var speed : int = 10;
 private var direction : Vector2;
 
+var particles : ParticleSystem;
+
 function NormalizeDirection () {
 	if (Mathf.Abs(direction.x) < Mathf.Abs(direction.y)) {
 		direction.x = Mathf.Sign(direction.x) * Mathf.Abs(direction.y);
@@ -30,6 +32,8 @@ function FixedUpdate () {
 	else if (transform.position.y > Constants.FIELD_HEIGHT_2) {
 		transform.position.y = Constants.FIELD_HEIGHT_2;
 		direction.y *= -1;
+//		particles.Emit(Vector3(0, 0, 0), Vector3(0, 1, 0), 2.0, 8.0, Color(0.2, 0.3, 0.4, 0.5));
+		particles.Emit(30);
 	}
 	
 	if (transform.position.x < -Constants.FIELD_WIDTH_2) {
