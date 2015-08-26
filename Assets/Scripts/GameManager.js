@@ -9,12 +9,12 @@ public var timer : float = 3;
 private var lastTime : float;
 
 function Awake() {
-	Time.timeScale = 1;
+	Time.timeScale = 0;
 }
 
 function Reset() {
 	timer = 3;
-	Time.timeScale = 1;
+	Time.timeScale = 0;
 	
 	lastTime = Time.realtimeSinceStartup;
 	

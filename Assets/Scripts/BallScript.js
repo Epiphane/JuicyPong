@@ -3,6 +3,7 @@
 public var ScoreManager : ScoreManager;
 public var speed : int = 10;
 private var direction : Vector2;
+private var animator : Animator;
 
 var particles : ParticleSystem;
 
@@ -16,6 +17,7 @@ function NormalizeDirection () {
 
 public function Start () {
 	direction = new Vector2(Random.value * 6 - 5, Random.value - 0.5);
+	animator = GetComponent(Animator);
 	NormalizeDirection();
 		
 	transform.position.x = transform.position.y = 0;
@@ -25,15 +27,19 @@ function FixedUpdate () {
 	transform.position.x += direction.x * Time.deltaTime * speed;
 	transform.position.y += direction.y * Time.deltaTime * speed;
 	
+	// Hit Bottom Ceiling
 	if (transform.position.y < -Constants.FIELD_HEIGHT_2) {
 		transform.position.y = -Constants.FIELD_HEIGHT_2;
 		direction.y *= -1;
+		particles.Emit(30);
+		animator.SetTrigger("BallHitCeiling");
 	}
+	// Hit Top Ceiling
 	else if (transform.position.y > Constants.FIELD_HEIGHT_2) {
 		transform.position.y = Constants.FIELD_HEIGHT_2;
 		direction.y *= -1;
-//		particles.Emit(Vector3(0, 0, 0), Vector3(0, 1, 0), 2.0, 8.0, Color(0.2, 0.3, 0.4, 0.5));
 		particles.Emit(30);
+		animator.SetTrigger("BallHitCeiling");
 	}
 	
 	if (transform.position.x < -Constants.FIELD_WIDTH_2) {
@@ -58,5 +64,7 @@ function OnTriggerEnter2D (other : Collider2D) {
 		
 		direction.y += dy / 2;
 		NormalizeDirection();
+		
+		animator.SetTrigger("BallHitPaddle");
 	}
 }
