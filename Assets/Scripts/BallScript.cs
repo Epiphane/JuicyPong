@@ -27,10 +27,10 @@ public class BallScript : MonoBehaviour {
 		transform.position = new Vector3(0, 0, -10);
 	}
 
+
+	// Check if hit walls
 	public void FixedUpdate () {
 		transform.position += direction * Time.deltaTime * speed;
-		
-//		transform.Rotate(Vector3.forward * -30);
 		
 		// Hit Bottom Ceiling
 		if (transform.position.y < -Constants.FIELD_HEIGHT_2) {
@@ -51,15 +51,17 @@ public class BallScript : MonoBehaviour {
 			particles.Emit(30);
 			animator.SetTrigger("BallHitCeiling");
 		}
-		
+
+		// Hit score-zoooone
 		if (transform.position.x < -Constants.FIELD_WIDTH_2) {
-			scoreManager.GetPoint(2);
+			scoreManager.GetPoint(2);  // get in the zooone
 		}
 		else if (transform.position.x > Constants.FIELD_WIDTH_2) {
-			scoreManager.GetPoint(1);
+			scoreManager.GetPoint(1);  // scoooore-o zooooone
 		}
 	}
 
+	// Hit paddle
 	public void OnTriggerEnter2D (Collider2D other) {
 		direction.x *= -1;
 
@@ -70,6 +72,7 @@ public class BallScript : MonoBehaviour {
 			var paddle = boxCollider.GetComponent<PaddleScript>();
 			if (paddle) {
 				dy += Mathf.Sign(paddle.dy);
+				paddle.HitBall();
 			}
 			
 			direction.y += dy / 2;

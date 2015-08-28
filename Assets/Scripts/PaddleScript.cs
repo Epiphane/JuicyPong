@@ -22,4 +22,10 @@ public class PaddleScript : MonoBehaviour {
 			transform.position = pos;
 		}
 	}
+
+	// Collided with ball!  Bounce myself and alert the powerup manager.
+	public void HitBall() {
+		GetComponent<Animator>().SetTrigger("PaddleHit");
+
+	}
 }
