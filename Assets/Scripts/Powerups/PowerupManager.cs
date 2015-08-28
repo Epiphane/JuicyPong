@@ -9,7 +9,7 @@ public class PowerupManager : MonoBehaviour {
 	// How much powerup progress does a paddle hit give?
 	float hitIncrement = 20f;
 
-	void PlayerPaddleHit(int which) {
+	public void PlayerPaddleHit(int which) {
 		if (which == 1) {
 			player1ui.powerupProgress += hitIncrement;
 		}

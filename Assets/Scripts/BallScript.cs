@@ -5,10 +5,12 @@ using System.Collections;
 public class BallScript : MonoBehaviour {
 	public ScoreManager scoreManager;
 	public int speed;
-	private Vector3 direction;
+	public Vector3 direction;
 	private Animator animator;
 
 	public ParticleSystem particles;
+
+	private Transform spriteTransform;
 
 	public void NormalizeDirection () {
 		if (Mathf.Abs(direction.x) < Mathf.Abs(direction.y)) {
@@ -25,13 +27,14 @@ public class BallScript : MonoBehaviour {
 		NormalizeDirection();
 		
 		transform.position = new Vector3(0, 0, -10);
+		spriteTransform = transform.Find("ballSprite");
 	}
 
 
 	// Check if hit walls
 	public void FixedUpdate () {
 		transform.position += direction * Time.deltaTime * speed;
-		
+
 		// Hit Bottom Ceiling
 		if (transform.position.y < -Constants.FIELD_HEIGHT_2) {
 			var pos = transform.position;
@@ -60,6 +63,12 @@ public class BallScript : MonoBehaviour {
 			scoreManager.GetPoint(1);  // scoooore-o zooooone
 		}
 	}
+
+	void LateUpdate() {
+		// Make ball sprite-face point forward
+		var angle = Mathf.Atan2(direction.y, direction.x);
+		spriteTransform.rotation = Quaternion.AngleAxis(Mathf.Rad2Deg * angle, Vector3.forward);
+	} 
 
 	// Hit paddle
 	public void OnTriggerEnter2D (Collider2D other) {

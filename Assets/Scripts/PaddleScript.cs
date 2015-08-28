@@ -6,6 +6,7 @@ public class PaddleScript : MonoBehaviour {
 	public int speed = 10;
 	public int player = 1;
 	public float dy = 0;
+	public PowerupManager powerups;
 	
 	void FixedUpdate () {
 		dy = Input.GetAxisRaw("P" + player + " Vertical") * speed;
@@ -26,6 +27,6 @@ public class PaddleScript : MonoBehaviour {
 	// Collided with ball!  Bounce myself and alert the powerup manager.
 	public void HitBall() {
 		GetComponent<Animator>().SetTrigger("PaddleHit");
-
+		powerups.PlayerPaddleHit(player);
 	}
 }
