@@ -1,6 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum GameState {
+	GetReady,
+	Playing,
+	ChoosePowerup,
+	Win,
+	Lose,
+}
+
 public class GameManager : MonoBehaviour {
 	public Transform player1;
 	public Transform player2;
@@ -9,6 +17,8 @@ public class GameManager : MonoBehaviour {
 	public GUIText CountdownGUI;
 	public float timer = 3;
 	private float lastTime;
+
+	public GameState gameState = GameState.Playing;
 	
 	void Awake() {
 		Time.timeScale = 0;
@@ -46,5 +56,13 @@ public class GameManager : MonoBehaviour {
 		else {
 			CountdownGUI.text = "";
 		}
+	}
+
+	// Helps us stop movement if the user is choosing a powerup or the game is over
+	public bool ShouldUpdate() {
+		if (gameState == GameState.Playing) {
+			return true;
+		}
+		return false;
 	}
 }

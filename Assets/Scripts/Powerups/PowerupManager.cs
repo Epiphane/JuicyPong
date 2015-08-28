@@ -9,14 +9,9 @@ public class PowerupManager : MonoBehaviour {
 	public BallScript ballHandle; // Ball fondlers
 
 	/** How much powerup progress does a paddle hit give? */
-	float hitIncrement = 20f;
+	float hitIncrement = 100f;
 
 	List<Powerup> activePowerups = new List<Powerup>();
-
-	void Start() {
-		AddPowerup(1, PowerupType.Fireball);
-		AddPowerup(1, PowerupType.Iceball);
-	}
 
 	public void PlayerPaddleHit(int which) {
 		if (which == 1) {
@@ -39,12 +34,13 @@ public class PowerupManager : MonoBehaviour {
 
 	public void AddPowerup(int player, PowerupType powerup) {
 		activePowerups.Add(new Powerup(powerup, player));
+		StartPowerup(powerup);
 	}
 
 	void Update() {
 		for (int i = activePowerups.Count - 1; i >= 0; i--) {
 			var powerup = activePowerups[i];
-//			powerup.timeLeft -= Time.deltaTime;
+			powerup.timeLeft -= Time.deltaTime;
 
 			if (powerup.timeLeft <= 0) {
 				activePowerups.RemoveAt(i);
@@ -52,23 +48,32 @@ public class PowerupManager : MonoBehaviour {
 		}
 	}
 
+	// Called when a powerup was just added to a player.
+	void StartPowerup(PowerupType powerup) {
+		switch (powerup) {
+		case PowerupType.Fireball:  // ACTIVATE FIREBALL
+			ballHandle.flamin = true;
+			break;
+		case PowerupType.Iceball:  // nothin
+			break;
+		}
+	}
 
-
+	// Called when a player with a powerup just hit the ball
 	void DoFriendlyHit(PowerupType powerup) {
 		switch (powerup) {
 		case PowerupType.Fireball:  // ACTIVATE FIREBALL
 			ballHandle.flamin = true;
 			break;
-		case PowerupType.Iceball:  // DEACTIVATE ICE
-			ballHandle.icy = false;
+		case PowerupType.Iceball:  // nothin
 			break;
 		}
 	}
 
+	// Called when a player with a powerup's ENEMY hit the ball
 	void DoEnemyHit(PowerupType powerup) {
 		switch(powerup) {
-		case PowerupType.Fireball: // DEACTIVATE FIREBALL
-			ballHandle.flamin = false;
+		case PowerupType.Fireball: // nothin
 			break;
 		case PowerupType.Iceball: // ACTIVATE ICE
 			ballHandle.icy = true;

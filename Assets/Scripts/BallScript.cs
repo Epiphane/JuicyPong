@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-
 public class BallScript : MonoBehaviour {
 	public ScoreManager scoreManager;
 	public float speed;
 	public float baseSpeed;
 	public Vector3 direction;
 	private Animator animator;
+
+	public GameManager manager;
 
 	public ParticleSystem particles;
 
@@ -39,6 +40,9 @@ public class BallScript : MonoBehaviour {
 
 	// Check if hit walls
 	public void FixedUpdate () {
+		if (!manager.ShouldUpdate()) {
+			return;
+		}
 
 		if (flamin) {
 			transform.position += direction * Time.deltaTime * speed * PowerupInfo.FIREBALL_SPEED_MULT;
@@ -97,6 +101,10 @@ public class BallScript : MonoBehaviour {
 
 	// Hit paddle
 	public void OnTriggerEnter2D (Collider2D other) {
+		if (!manager.ShouldUpdate()) {
+			return;
+		}
+
 		direction.x *= -1;
 
 		var boxCollider = other as BoxCollider2D;
@@ -106,6 +114,10 @@ public class BallScript : MonoBehaviour {
 			var paddle = boxCollider.GetComponent<PaddleScript>();
 			if (paddle) {
 				dy += Mathf.Sign(paddle.dy);
+
+				if (flamin) { flamin = false; }
+				if (icy)    { icy = false; }
+
 				paddle.HitBall();
 			}
 			

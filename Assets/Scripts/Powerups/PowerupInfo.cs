@@ -15,7 +15,8 @@ public class PowerupInfo {
 		return new PowerupType[] {PowerupType.Fireball, PowerupType.Iceball};
 	}
 
-	public string PowerupName(PowerupType type) {
+	// Human readable string of this powerup
+	public static string Name(PowerupType type) {
 		switch (type) {
 		case PowerupType.Fireball:
 			return "Fireball";

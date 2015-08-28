@@ -7,8 +7,13 @@ public class PaddleScript : MonoBehaviour {
 	public int player = 1;
 	public float dy = 0;
 	public PowerupManager powerups;
+	public GameManager manager;
 	
 	void FixedUpdate () {
+		if (!manager.ShouldUpdate()) {
+			return;
+		}
+
 		dy = Input.GetAxisRaw("P" + player + " Vertical") * speed;
 		transform.position += new Vector3(0, dy * Time.deltaTime, 0);
 		
