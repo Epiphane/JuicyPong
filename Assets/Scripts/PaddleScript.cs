@@ -27,6 +27,6 @@ public class PaddleScript : MonoBehaviour {
 	// Collided with ball!  Bounce myself and alert the powerup manager.
 	public void HitBall() {
 		GetComponent<Animator>().SetTrigger("PaddleHit");
-		powerups.PlayerPaddleHit(player);
+		powerups.PlayerPaddleHit(player);	
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 /// <summary>
@@ -15,9 +16,13 @@ public class PowerupUI : MonoBehaviour {
 
 	// Lets us change the width of the Green 'progress' indicator
 	RectTransform innerBarTransform;
+	Text choice1;
+	Text choice2;
 
 	void Awake() {
 		innerBarTransform = transform.Find("PowerupBar/Progress").GetComponent<RectTransform>();
+		choice1 = transform.Find ("POWERUP 1").GetComponent<Text>();
+		choice2 = transform.Find ("POWERUP 2").GetComponent<Text>();
 	}
 	
 	// Update is called once per frame. YA DON'T SAY!!?
@@ -34,7 +39,13 @@ public class PowerupUI : MonoBehaviour {
 	/// Adds to the current powerup progress.
 	/// </summary>
 	/// <param name="amount">How much? (you get a powerup at 100)</param>
-	public void AddPowerupProgress(int amount) {
+	public void AddPowerupProgress(float amount) {
+		powerupProgress += amount;
 
+		if (powerupProgress >= 100) {
+			// Powerup time!
+			var choices = PowerupInfo.Choose2RandomPowerups();
+
+		}
 	}
 }
