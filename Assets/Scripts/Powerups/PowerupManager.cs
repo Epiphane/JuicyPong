@@ -8,10 +8,22 @@ public class PowerupManager : MonoBehaviour {
 	public PowerupUI player2ui;
 	public BallScript ballHandle; // Ball fondlers
 
+	public PaddleScript player1; // Paddle fondlers
+	public PaddleScript player2;
+	PaddleScript[] players = new PaddleScript[3];
+
 	/** How much powerup progress does a paddle hit give? */
-	float hitIncrement = 100f;
+	float hitIncrement = 20f;
 
 	List<Powerup> activePowerups = new List<Powerup>();
+
+	void Start() {
+		players[1] = player1;
+		players[2] = player2;
+
+		AddPowerup(1, PowerupType.Magnet);
+//		AddPowerup(2, PowerupType.Magnet);
+	}
 
 	public void PlayerPaddleHit(int which) {
 		if (which == 1) {
@@ -23,7 +35,6 @@ public class PowerupManager : MonoBehaviour {
 		
 		foreach (var powerup in activePowerups) {
 			if (which == powerup.whichPlayer) {
-				print(powerup.type);
 				DoFriendlyHit(powerup.type);
 			}
 			else {
@@ -34,7 +45,7 @@ public class PowerupManager : MonoBehaviour {
 
 	public void AddPowerup(int player, PowerupType powerup) {
 		activePowerups.Add(new Powerup(powerup, player));
-		StartPowerup(powerup);
+		StartPowerup(powerup, players[player]);
 	}
 
 	void Update() {
@@ -43,18 +54,29 @@ public class PowerupManager : MonoBehaviour {
 			powerup.timeLeft -= Time.deltaTime;
 
 			if (powerup.timeLeft <= 0) {
+				EndPowerup(powerup.type, players[powerup.whichPlayer]);
 				activePowerups.RemoveAt(i);
 			}
 		}
 	}
 
 	// Called when a powerup was just added to a player.
-	void StartPowerup(PowerupType powerup) {
+	void StartPowerup(PowerupType powerup, PaddleScript player) {
 		switch (powerup) {
 		case PowerupType.Fireball:  // ACTIVATE FIREBALL
 			ballHandle.flamin = true;
 			break;
-		case PowerupType.Iceball:  // nothin
+		case PowerupType.Magnet:
+			player.magnetized = true;
+			break;
+		}
+	}
+
+	// Called when a powerup is over and done
+	void EndPowerup(PowerupType powerup, PaddleScript player) {
+		switch(powerup) {
+		case PowerupType.Magnet:
+			player.magnetized = false;
 			break;
 		}
 	}
@@ -64,8 +86,6 @@ public class PowerupManager : MonoBehaviour {
 		switch (powerup) {
 		case PowerupType.Fireball:  // ACTIVATE FIREBALL
 			ballHandle.flamin = true;
-			break;
-		case PowerupType.Iceball:  // nothin
 			break;
 		}
 	}

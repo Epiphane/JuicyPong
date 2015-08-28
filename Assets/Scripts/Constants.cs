@@ -2,13 +2,27 @@
 using System.Collections;
 
 public class Constants : MonoBehaviour {
-	public static float FIELD_WIDTH = 12f;
-	public static float FIELD_HEIGHT = 5.3f;
+	public static float FIELD_WIDTH;
+	public static float FIELD_HEIGHT;
 	
-	public static float FIELD_WIDTH_2 = FIELD_WIDTH / 2;
-	public static float FIELD_HEIGHT_2 = FIELD_HEIGHT / 2;
+	public static float FIELD_WIDTH_2;
+	public static float FIELD_HEIGHT_2;
 
-	void Awake() {
+	Bounds SCREEN_SIZE;
+
+	void Start() {
 		GameObject.DontDestroyOnLoad(this);
+
+		float screenAspect = (float)Screen.width / (float)Screen.height;
+		float cameraHeight = Camera.main.orthographicSize * 2;
+		SCREEN_SIZE = new Bounds(
+			Camera.main.transform.position,
+			new Vector3(cameraHeight * screenAspect, cameraHeight, 0));
+
+		FIELD_WIDTH = SCREEN_SIZE.size.x;
+		FIELD_HEIGHT = SCREEN_SIZE.size.y;
+
+		FIELD_WIDTH_2 = FIELD_WIDTH / 2;
+		FIELD_HEIGHT_2 = FIELD_HEIGHT / 2;
 	}
 }

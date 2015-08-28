@@ -44,13 +44,13 @@ public class BallScript : MonoBehaviour {
 			return;
 		}
 
-		if (flamin) {
+		if (flamin) { // flames > ice.  They're "cooler" ahahaha
 			transform.position += direction * Time.deltaTime * speed * PowerupInfo.FIREBALL_SPEED_MULT;
 		}
 		else if (icy) {
 			transform.position += direction * Time.deltaTime * speed * PowerupInfo.ICEBALL_SPEED_MULT;
 		}
-		else {  // Normal + BORING
+		else {
 			transform.position += direction * Time.deltaTime * speed;
 		}
 
@@ -88,7 +88,7 @@ public class BallScript : MonoBehaviour {
 		var angle = Mathf.Atan2(direction.y, direction.x);
 		visibleSprite.transform.rotation = Quaternion.AngleAxis(Mathf.Rad2Deg * angle, Vector3.forward);
 
-		if (flamin) {
+		if (flamin) { // flames > ice.  They're "cooler" ahahaha
 			visibleSprite.GetComponent<SpriteRenderer>().color = Color.red;
 		}
 		else if (icy) {

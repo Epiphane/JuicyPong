@@ -102,13 +102,11 @@ public class PowerupUI : MonoBehaviour {
 
 	public void ChosePowerup1() {
 		powerupManager.AddPowerup(player, type1);
-		print ("CHOSE 1");
 		StopChoosing();
 	}
 
 	public void ChosePowerup2() {
 		powerupManager.AddPowerup(player, type2);
-		print ("CHOSE 2");
 		StopChoosing();
 	}
 

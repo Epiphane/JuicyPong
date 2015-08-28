@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public enum PowerupType {
 	Fireball,
 	Iceball,
+	Magnet,
 }
 
 // PowerupInfo only has static stuff, and handles the names / icons of all the powerups.
@@ -22,6 +23,8 @@ public class PowerupInfo {
 			return "Fireball";
 		case PowerupType.Iceball:
 			return "Iceball";
+		case PowerupType.Magnet:
+			return "Magnet";
 		}
 		return "";
 	}

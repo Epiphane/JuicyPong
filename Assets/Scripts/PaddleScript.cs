@@ -6,11 +6,13 @@ public class PaddleScript : MonoBehaviour {
 	public int speed = 10;
 	public int player = 1;
 	public float dy = 0;
-	public PowerupManager powerups;
-	public GameManager manager;
+	public PowerupManager powerupManager;
+	public GameManager gameManager;
+
+	public bool magnetized = false;
 	
 	void FixedUpdate () {
-		if (!manager.ShouldUpdate()) {
+		if (!gameManager.ShouldUpdate()) {
 			return;
 		}
 
@@ -27,11 +29,21 @@ public class PaddleScript : MonoBehaviour {
 			pos.y = Constants.FIELD_HEIGHT_2;
 			transform.position = pos;
 		}
+
+		if (magnetized) {
+			var diffY = transform.position.y - gameManager.ballScript.transform.position.y;
+			var diffX = Mathf.Abs(transform.position.x - gameManager.ballScript.transform.position.x) * 0.8f;
+			var influence = Mathf.Pow ((1 - diffX / Constants.FIELD_WIDTH), 4f) * 0.1f;
+
+			gameManager.ballScript.transform.Translate(new Vector3(0, diffY * influence, 0));
+
+			print ("Influence: " + influence);
+		}
 	}
 
 	// Collided with ball!  Bounce myself and alert the powerup manager.
 	public void HitBall() {
 		GetComponent<Animator>().SetTrigger("PaddleHit");
-		powerups.PlayerPaddleHit(player);
+		powerupManager.PlayerPaddleHit(player);
 	}
 }

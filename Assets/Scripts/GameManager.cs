@@ -29,9 +29,10 @@ public class GameManager : MonoBehaviour {
 		Time.timeScale = 0;
 		
 		lastTime = Time.realtimeSinceStartup;
-		
-		player1.position = new Vector3(-5, 0, -10);
-		player2.position = new Vector3(5, 0, -10);
+
+		var paddleOffset = Constants.FIELD_WIDTH_2 * 0.8f;
+		player1.position = new Vector3(-paddleOffset, 0, -10);
+		player2.position = new Vector3(paddleOffset, 0, -10);
 		
 		ballScript.Start();
 	}
