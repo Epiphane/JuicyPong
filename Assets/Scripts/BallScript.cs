@@ -4,13 +4,17 @@ using System.Collections;
 
 public class BallScript : MonoBehaviour {
 	public ScoreManager scoreManager;
-	public int speed;
+	public float speed;
+	public float baseSpeed;
 	public Vector3 direction;
 	private Animator animator;
 
 	public ParticleSystem particles;
 
-	private Transform spriteTransform;
+	private GameObject visibleSprite;
+
+	public bool flamin = false;
+	public bool icy = false;
 
 	public void NormalizeDirection () {
 		if (Mathf.Abs(direction.x) < Mathf.Abs(direction.y)) {
@@ -27,13 +31,24 @@ public class BallScript : MonoBehaviour {
 		NormalizeDirection();
 		
 		transform.position = new Vector3(0, 0, -10);
-		spriteTransform = transform.Find("ballSprite");
+		visibleSprite = transform.Find("ballSprite").gameObject;
+
+		baseSpeed = speed;
 	}
 
 
 	// Check if hit walls
 	public void FixedUpdate () {
-		transform.position += direction * Time.deltaTime * speed;
+
+		if (flamin) {
+			transform.position += direction * Time.deltaTime * speed * PowerupInfo.FIREBALL_SPEED_MULT;
+		}
+		else if (icy) {
+			transform.position += direction * Time.deltaTime * speed * PowerupInfo.ICEBALL_SPEED_MULT;
+		}
+		else {  // Normal + BORING
+			transform.position += direction * Time.deltaTime * speed;
+		}
 
 		// Hit Bottom Ceiling
 		if (transform.position.y < -Constants.FIELD_HEIGHT_2) {
@@ -67,7 +82,17 @@ public class BallScript : MonoBehaviour {
 	void LateUpdate() {
 		// Make ball sprite-face point forward
 		var angle = Mathf.Atan2(direction.y, direction.x);
-		spriteTransform.rotation = Quaternion.AngleAxis(Mathf.Rad2Deg * angle, Vector3.forward);
+		visibleSprite.transform.rotation = Quaternion.AngleAxis(Mathf.Rad2Deg * angle, Vector3.forward);
+
+		if (flamin) {
+			visibleSprite.GetComponent<SpriteRenderer>().color = Color.red;
+		}
+		else if (icy) {
+			visibleSprite.GetComponent<SpriteRenderer>().color = Color.blue;
+		}
+		else {
+			visibleSprite.GetComponent<SpriteRenderer>().color = Color.white;
+		}
 	} 
 
 	// Hit paddle

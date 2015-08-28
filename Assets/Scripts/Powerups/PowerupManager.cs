@@ -6,11 +6,17 @@ public class PowerupManager : MonoBehaviour {
 
 	public PowerupUI player1ui;
 	public PowerupUI player2ui;
+	public BallScript ballHandle; // Ball fondlers
 
 	/** How much powerup progress does a paddle hit give? */
 	float hitIncrement = 20f;
 
 	List<Powerup> activePowerups = new List<Powerup>();
+
+	void Start() {
+		AddPowerup(1, PowerupType.Fireball);
+		AddPowerup(1, PowerupType.Iceball);
+	}
 
 	public void PlayerPaddleHit(int which) {
 		if (which == 1) {
@@ -21,11 +27,12 @@ public class PowerupManager : MonoBehaviour {
 		}
 		
 		foreach (var powerup in activePowerups) {
-			if (player == powerup.whichPlayer) {
-				DoFriendlyHit(powerup);
+			if (which == powerup.whichPlayer) {
+				print(powerup.type);
+				DoFriendlyHit(powerup.type);
 			}
 			else {
-				DoEnemyHit(powerup);
+				DoEnemyHit(powerup.type);
 			}
 		}
 	}
@@ -37,7 +44,7 @@ public class PowerupManager : MonoBehaviour {
 	void Update() {
 		for (int i = activePowerups.Count - 1; i >= 0; i--) {
 			var powerup = activePowerups[i];
-			powerup.timeLeft -= Time.deltaTime;
+//			powerup.timeLeft -= Time.deltaTime;
 
 			if (powerup.timeLeft <= 0) {
 				activePowerups.RemoveAt(i);
@@ -49,22 +56,22 @@ public class PowerupManager : MonoBehaviour {
 
 	void DoFriendlyHit(PowerupType powerup) {
 		switch (powerup) {
-		case PowerupType.Fireball:
-			// Speed da ball up
+		case PowerupType.Fireball:  // ACTIVATE FIREBALL
+			ballHandle.flamin = true;
 			break;
-		case PowerupType.Iceball:
-			// Turn ball to normal color
+		case PowerupType.Iceball:  // DEACTIVATE ICE
+			ballHandle.icy = false;
 			break;
 		}
 	}
 
 	void DoEnemyHit(PowerupType powerup) {
 		switch(powerup) {
-		case PowerupType.Fireball:
-			// Turn ball to normal color
+		case PowerupType.Fireball: // DEACTIVATE FIREBALL
+			ballHandle.flamin = false;
 			break;
-		case PowerupType.Iceball:
-			// Slow da ball down
+		case PowerupType.Iceball: // ACTIVATE ICE
+			ballHandle.icy = true;
 			break;
 		}
 	}

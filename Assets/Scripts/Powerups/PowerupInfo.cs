@@ -24,6 +24,9 @@ public class PowerupInfo {
 		}
 		return "";
 	}
+
+	public static float FIREBALL_SPEED_MULT = 2f;
+	public static float ICEBALL_SPEED_MULT = 0.5f;
 }
 
 public class Powerup {
