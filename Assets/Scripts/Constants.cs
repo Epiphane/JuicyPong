@@ -10,7 +10,7 @@ public class Constants : MonoBehaviour {
 
 	Bounds SCREEN_SIZE;
 
-	void Start() {
+	void Awake() {
 		GameObject.DontDestroyOnLoad(this);
 
 		float screenAspect = (float)Screen.width / (float)Screen.height;

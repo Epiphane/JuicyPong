@@ -21,9 +21,13 @@ public class PowerupManager : MonoBehaviour {
 		players[1] = player1;
 		players[2] = player2;
 
-		AddPowerup(2, PowerupType.Ghost);
+		AddPowerup(2, PowerupType.Shield);
+		AddPowerup(1, PowerupType.Shield);
+//		AddPowerup(1, PowerupType.Shield);
 	}
 
+	// Ball hit a paddle.  Increment powerup progress and activate
+	//  the correct powerup effects.
 	public void PlayerPaddleHit(int which) {
 		if (which == 1) {
 			player1ui.AddPowerupProgress(hitIncrement);
@@ -71,6 +75,9 @@ public class PowerupManager : MonoBehaviour {
 		case PowerupType.Ghost:
 			player.ghostly = true;
 			break;
+		case PowerupType.Shield:
+			SpawnShield(player);
+			break;
 		}
 	}
 
@@ -105,5 +112,10 @@ public class PowerupManager : MonoBehaviour {
 			ballHandle.icy = true;
 			break;
 		}
+	}
+
+	void SpawnShield(PaddleScript player) {
+		var newShield = GameObject.Instantiate(Resources.Load ("Shield")) as GameObject;
+		newShield.transform.position = new Vector3(Constants.FIELD_WIDTH_2 * 0.95f * Mathf.Sign(player.transform.position.x), 0, 0);
 	}
 }

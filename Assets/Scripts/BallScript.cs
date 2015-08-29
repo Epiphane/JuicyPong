@@ -116,16 +116,16 @@ public class BallScript : MonoBehaviour {
 			var dy = transform.position.y - boxCollider.transform.position.y * 2 / boxCollider.size.y;
 			
 			var paddle = boxCollider.GetComponent<PaddleScript>();
+			
+			if (flamin) { flamin = false; }
+			if (icy)    { icy = false; }
+
 			if (paddle) {
 				dy += Mathf.Sign(paddle.dy);
-
-				if (flamin) { flamin = false; }
-				if (icy)    { icy = false; }
-
 				paddle.HitBall();
+				direction.y += dy / 2;
 			}
-			
-			direction.y += dy / 2;
+
 			NormalizeDirection();
 			
 			animator.SetTrigger("BallHitPaddle");
