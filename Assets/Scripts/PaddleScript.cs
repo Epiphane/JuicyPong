@@ -10,6 +10,7 @@ public class PaddleScript : MonoBehaviour {
 	public GameManager gameManager;
 
 	public bool magnetized = false;
+	public bool ghostly = false;
 	
 	void FixedUpdate () {
 		if (!gameManager.ShouldUpdate()) {
@@ -36,8 +37,15 @@ public class PaddleScript : MonoBehaviour {
 			var influence = Mathf.Pow ((1 - diffX / Constants.FIELD_WIDTH), 4f) * 0.1f;
 
 			gameManager.ballScript.transform.Translate(new Vector3(0, diffY * influence, 0));
+		}
 
-			print ("Influence: " + influence);
+		if (ghostly) {
+			if (Mathf.Sign (gameManager.ballScript.transform.position.x) != Mathf.Sign (transform.position.x)) {
+				gameManager.ballScript.ghost = true;
+			}
+			else {
+				gameManager.ballScript.ghost = false;
+			}
 		}
 	}
 

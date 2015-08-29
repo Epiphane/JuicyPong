@@ -14,6 +14,7 @@ public class BallScript : MonoBehaviour {
 
 	private GameObject visibleSprite;
 
+	public bool ghost = false;
 	public bool flamin = false;
 	public bool icy = false;
 
@@ -88,7 +89,10 @@ public class BallScript : MonoBehaviour {
 		var angle = Mathf.Atan2(direction.y, direction.x);
 		visibleSprite.transform.rotation = Quaternion.AngleAxis(Mathf.Rad2Deg * angle, Vector3.forward);
 
-		if (flamin) { // flames > ice.  They're "cooler" ahahaha
+		if (ghost) {
+			visibleSprite.GetComponent<SpriteRenderer>().color = new Color(1.0f, 1.0f, 1.0f, 0.2f);
+		}
+		else if (flamin) { // flames > ice.  They're "cooler" ahahaha
 			visibleSprite.GetComponent<SpriteRenderer>().color = Color.red;
 		}
 		else if (icy) {

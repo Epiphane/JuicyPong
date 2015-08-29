@@ -6,6 +6,9 @@ public enum PowerupType {
 	Fireball,
 	Iceball,
 	Magnet,
+	Shield,
+	Portals,
+	Ghost,
 }
 
 // PowerupInfo only has static stuff, and handles the names / icons of all the powerups.

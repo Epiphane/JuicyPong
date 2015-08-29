@@ -21,8 +21,7 @@ public class PowerupManager : MonoBehaviour {
 		players[1] = player1;
 		players[2] = player2;
 
-		AddPowerup(1, PowerupType.Magnet);
-//		AddPowerup(2, PowerupType.Magnet);
+		AddPowerup(2, PowerupType.Ghost);
 	}
 
 	public void PlayerPaddleHit(int which) {
@@ -69,6 +68,9 @@ public class PowerupManager : MonoBehaviour {
 		case PowerupType.Magnet:
 			player.magnetized = true;
 			break;
+		case PowerupType.Ghost:
+			player.ghostly = true;
+			break;
 		}
 	}
 
@@ -77,6 +79,10 @@ public class PowerupManager : MonoBehaviour {
 		switch(powerup) {
 		case PowerupType.Magnet:
 			player.magnetized = false;
+			break;
+		case PowerupType.Ghost:
+			player.ghostly = false;
+			ballHandle.ghost = false;
 			break;
 		}
 	}
