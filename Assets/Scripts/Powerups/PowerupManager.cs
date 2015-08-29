@@ -13,7 +13,7 @@ public class PowerupManager : MonoBehaviour {
 	PaddleScript[] players = new PaddleScript[3];
 
 	/** How much powerup progress does a paddle hit give? */
-	float hitIncrement = 20f;
+	float hitIncrement = 100f;
 
 	List<Powerup> activePowerups = new List<Powerup>();
 
@@ -22,8 +22,6 @@ public class PowerupManager : MonoBehaviour {
 		players[2] = player2;
 
 		AddPowerup(2, PowerupType.Shield);
-		AddPowerup(1, PowerupType.Shield);
-//		AddPowerup(1, PowerupType.Shield);
 	}
 
 	// Ball hit a paddle.  Increment powerup progress and activate

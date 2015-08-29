@@ -50,13 +50,13 @@ public class PowerupUI : MonoBehaviour {
 		if (dy > 0.5) {
 			eventSystem.SetSelectedGameObject(choice1.gameObject);
 			choice1.color = Color.white;
-			choice2.color = Color.cyan;
+			choice2.color = Color.gray;
 			currChoice = 1;
 		}
 		else if (dy < -0.5) {
 			eventSystem.SetSelectedGameObject(choice2.gameObject);
 			choice2.color = Color.white;
-			choice1.color = Color.red;
+			choice1.color = Color.gray;
 			currChoice = 2;
 		}
 
@@ -89,10 +89,10 @@ public class PowerupUI : MonoBehaviour {
 			type2 = choices[1];
 
 			choice1.text = PowerupInfo.Name(type1);
-			choice1.color = Color.red;
+			choice1.color = Color.gray;
 			
 			choice2.text = PowerupInfo.Name(type2);
-			choice2.color = Color.cyan;
+			choice2.color = Color.gray;
 
 			gameManager.gameState = GameState.ChoosePowerup;
 			choice1.GetComponent<Button>().interactable = true;

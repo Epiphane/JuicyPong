@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public enum PowerupType {
 	Fireball,
 	Iceball,
 	Magnet,
 	Shield,
-	Portals,
+//	Portals,
 	Ghost,
 }
 
@@ -15,8 +16,12 @@ public enum PowerupType {
 public class PowerupInfo {
 
 	public static PowerupType[] Choose2RandomPowerups() {
-		// Look at how random this is
-		return new PowerupType[] {PowerupType.Fireball, PowerupType.Iceball};
+		var powerups = System.Enum.GetValues(typeof(PowerupType));
+		var firstNdx = UnityEngine.Random.Range(0, powerups.Length);
+		var secondNdx = firstNdx + UnityEngine.Random.Range (0, powerups.Length - 2);
+		secondNdx %= powerups.Length;
+
+		return new PowerupType[] {(PowerupType) powerups.GetValue(firstNdx), (PowerupType) powerups.GetValue(secondNdx)};
 	}
 
 	// Human readable string of this powerup
@@ -28,6 +33,12 @@ public class PowerupInfo {
 			return "Iceball";
 		case PowerupType.Magnet:
 			return "Magnet";
+		case PowerupType.Shield:
+			return "Shield";
+//		case PowerupType.Portals:
+//			return "Portals";
+		case PowerupType.Ghost:
+			return "Ghost";
 		}
 		return "";
 	}
