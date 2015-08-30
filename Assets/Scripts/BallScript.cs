@@ -109,13 +109,15 @@ public class BallScript : MonoBehaviour {
 			return;
 		}
 
-		direction.x *= -1;
 
 		var boxCollider = other as BoxCollider2D;
-		if (boxCollider) {
+		var paddle = boxCollider.GetComponent<PaddleScript>();
+		if (boxCollider && paddle) {
+
+			direction.x *= -1;
+
 			var dy = transform.position.y - boxCollider.transform.position.y * 2 / boxCollider.size.y;
-			
-			var paddle = boxCollider.GetComponent<PaddleScript>();
+
 			
 			if (flamin) { flamin = false; }
 			if (icy)    { icy = false; }

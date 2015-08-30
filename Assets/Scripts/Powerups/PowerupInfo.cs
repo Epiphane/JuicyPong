@@ -8,7 +8,7 @@ public enum PowerupType {
 	Iceball,
 	Magnet,
 	Shield,
-//	Portals,
+	Portals,
 	Ghost,
 }
 
@@ -35,8 +35,8 @@ public class PowerupInfo {
 			return "Magnet";
 		case PowerupType.Shield:
 			return "Shield";
-//		case PowerupType.Portals:
-//			return "Portals";
+		case PowerupType.Portals:
+			return "Portals";
 		case PowerupType.Ghost:
 			return "Ghost";
 		}
