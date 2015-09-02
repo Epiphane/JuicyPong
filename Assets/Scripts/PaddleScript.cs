@@ -7,8 +7,9 @@ public class PaddleScript : MonoBehaviour {
 	public float PADDLE_Z = -10;
 
 	public int speed = 10;
-	public int player = 1;
+	public int playerNum = 1;
 	public float dy = 0;
+	public float powerupProgress = 0f;
 	public PowerupManager powerupManager;
 	public GameManager gameManager;
 
@@ -59,7 +60,7 @@ public class PaddleScript : MonoBehaviour {
 			return;
 		}
 
-		dy = Input.GetAxisRaw("P" + player + " Vertical") * speed;
+		dy = Input.GetAxisRaw("P" + playerNum + " Vertical") * speed;
 		transform.position += new Vector3(0, dy * Time.deltaTime, 0);
 		
 		if (transform.position.y < -Constants.FIELD_HEIGHT_2) {
@@ -78,7 +79,7 @@ public class PaddleScript : MonoBehaviour {
 			var diffX = Mathf.Abs(transform.position.x - gameManager.ballScript.transform.position.x) * 0.8f;
 			var influence = Mathf.Pow ((1 - diffX / Constants.FIELD_WIDTH), 4f) * 0.1f;
 
-			gameManager.ballScript.transform.Translate(new Vector3(0, diffY * influence, 0));
+			gameManager.ballScript.transform.Translate(new Vector3(0f, diffY * influence, 0f));
 		}
 
 		if (ghostly) {
@@ -94,6 +95,6 @@ public class PaddleScript : MonoBehaviour {
 	// Collided with ball!  Bounce myself and alert the powerup manager.
 	public void HitBall() {
 		GetComponent<Animator>().SetTrigger("PaddleHit");
-		powerupManager.PlayerPaddleHit(player);
+		powerupManager.PlayerPaddleHit(playerNum);
 	}
 }

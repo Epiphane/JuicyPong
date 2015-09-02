@@ -109,23 +109,20 @@ public class BallScript : MonoBehaviour {
 			return;
 		}
 
-
 		var boxCollider = other as BoxCollider2D;
 		var paddle = boxCollider.GetComponent<PaddleScript>();
 		if (boxCollider && paddle) {
-
-			direction.x *= -1;
-
-			var dy = transform.position.y - boxCollider.transform.position.y * 2 / boxCollider.size.y;
-
 			
 			if (flamin) { flamin = false; }
 			if (icy)    { icy = false; }
+			
+			direction.x *= -1;
 
 			if (paddle) {
-				dy += Mathf.Sign(paddle.dy);
 				paddle.HitBall();
-				direction.y += dy / 2;
+
+				var dy = transform.position.y - boxCollider.transform.position.y;
+				direction.y = dy * 2;
 			}
 
 			NormalizeDirection();

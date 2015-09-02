@@ -12,8 +12,8 @@ using System.Collections;
 
 public class PowerupUI : MonoBehaviour {
 
-	public int player;
-	public float powerupProgress = 0f;
+	private int playerNum = 0;
+	public PaddleScript playerObject;
 	public Canvas myCanvas;
 	public GameManager gameManager;
 	public PowerupManager powerupManager;
@@ -40,13 +40,13 @@ public class PowerupUI : MonoBehaviour {
 	// Update is called once per frame. YA DON'T SAY!!?
 	void Update () {
 		var totalWidth = Screen.width / 2;
-		var progressFraction = Mathf.Min(1, powerupProgress / 100);
+		var progressFraction = Mathf.Min(1, playerObject.powerupProgress / 100);
 		var barWidth = totalWidth * progressFraction;
 		var insetWidth = totalWidth - barWidth;
 
 		innerBarTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, insetWidth, barWidth);
 		
-		var dy = Input.GetAxisRaw("P" + player + " Vertical");
+		var dy = Input.GetAxisRaw("P" + playerNum + " Vertical");
 		if (dy > 0.5) {
 			eventSystem.SetSelectedGameObject(choice1.gameObject);
 			choice1.color = Color.white;
@@ -60,7 +60,7 @@ public class PowerupUI : MonoBehaviour {
 			currChoice = 2;
 		}
 
-		if (choice1.GetComponent<Button>().interactable && Input.GetButtonDown ("SubmitPlayer" + player)) {
+		if (choice1.GetComponent<Button>().interactable && Input.GetButtonDown ("SubmitPlayer" + playerNum)) {
 			if (currChoice == 1) {
 				ChosePowerup1();
 			}
@@ -79,9 +79,9 @@ public class PowerupUI : MonoBehaviour {
 			return;
 		}
 
-		powerupProgress += amount;
+		playerObject.powerupProgress += amount;
 
-		if (powerupProgress >= 100) {
+		if (playerObject.powerupProgress >= 100) {
 			// Powerup time!
 			currChoice = 0;
 			var choices = PowerupInfo.Choose2RandomPowerups();
@@ -101,12 +101,12 @@ public class PowerupUI : MonoBehaviour {
 	}
 
 	public void ChosePowerup1() {
-		powerupManager.AddPowerup(player, type1);
+		powerupManager.AddPowerup(playerNum, type1);
 		StopChoosing();
 	}
 
 	public void ChosePowerup2() {
-		powerupManager.AddPowerup(player, type2);
+		powerupManager.AddPowerup(playerNum, type2);
 		StopChoosing();
 	}
 

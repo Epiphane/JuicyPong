@@ -21,12 +21,13 @@ public class GameManager : MonoBehaviour {
 	public GameState gameState = GameState.Playing;
 	
 	void Awake() {
-		Time.timeScale = 0;
+//		Time.timeScale = 0;
 	}
 	
 	public void Reset() {
 		timer = 3;
-		Time.timeScale = 0;
+//		Time.timeScale = 0;
+		Time.timeScale = 1;
 		
 		lastTime = Time.realtimeSinceStartup;
 
@@ -35,7 +36,7 @@ public class GameManager : MonoBehaviour {
 		player2.position = new Vector3(paddleOffset, 0, -10);
 
 		player1.GetComponent<PaddleScript> ().PADDLE_X = -paddleOffset;
-		player1.GetComponent<PaddleScript> ().PADDLE_X = paddleOffset;
+		player2.GetComponent<PaddleScript> ().PADDLE_X = paddleOffset;
 		
 		ballScript.Start();
 	}
@@ -45,21 +46,21 @@ public class GameManager : MonoBehaviour {
 	}
 	
 	void Update () {
-		if (timer > -1) {
-			timer -= (Time.realtimeSinceStartup - lastTime);
-			lastTime = Time.realtimeSinceStartup;
-			
-			if (timer > 0) {
-				CountdownGUI.text = "" + Mathf.Ceil(timer);
-			}
-			else {
-				Time.timeScale = 1;
-				CountdownGUI.text = "GO!";
-			}
-		}
-		else {
-			CountdownGUI.text = "";
-		}
+//		if (timer > -1) {
+//			timer -= (Time.realtimeSinceStartup - lastTime);
+//			lastTime = Time.realtimeSinceStartup;
+//			
+//			if (timer > 0) {
+//				CountdownGUI.text = "" + Mathf.Ceil(timer);
+//			}
+//			else {
+//				Time.timeScale = 1;
+//				CountdownGUI.text = "GO!";
+//			}
+//		}
+//		else {
+//			CountdownGUI.text = "";
+//		}
 	}
 
 	// Helps us stop movement if the user is choosing a powerup or the game is over
