@@ -3,6 +3,9 @@ using System.Collections;
 
 public class PaddleScript : MonoBehaviour {
 
+	public float PADDLE_X = 0;
+	public float PADDLE_Z = -10;
+
 	public int speed = 10;
 	public int player = 1;
 	public float dy = 0;
@@ -11,6 +14,45 @@ public class PaddleScript : MonoBehaviour {
 
 	public bool magnetized = false;
 	public bool ghostly = false;
+
+	/**** MOBILE, PAN GESTURE STUFF ***/
+
+	private int currentTouchID = -1; // Each touch corresponds to a unique ID.  Each paddle only cares about 1 touch at a time, defined by this variable.
+
+	// Register for pan gesture events
+	private void OnEnable() {
+		MobileInputHandler.OnPanBegan += PanBegan;
+		MobileInputHandler.OnPanHeld += PanMoved;
+		MobileInputHandler.OnPanEnded+= PanEnded;
+	}
+
+	private void OnDisable() {
+		MobileInputHandler.OnPanBegan -= PanBegan;
+		MobileInputHandler.OnPanHeld -= PanMoved;
+		MobileInputHandler.OnPanEnded -= PanEnded;
+	}
+
+	void PanBegan(Touch t) {
+		// Check if the gesture was on our side
+		var worldPoint = Camera.main.ScreenToWorldPoint(t.position);
+		if (Mathf.Sign (worldPoint.x) == Mathf.Sign (transform.position.x) && currentTouchID == -1) {
+			currentTouchID = t.fingerId;
+		}
+	}
+
+	public void PanMoved(Touch t) {
+		if (t.fingerId == currentTouchID) {
+			var worldPoint = Camera.main.ScreenToWorldPoint(t.position);
+			transform.position = new Vector3(PADDLE_X, worldPoint.y, PADDLE_Z);
+		}
+	}
+
+	public void PanEnded(Touch t) {
+		if (t.fingerId == currentTouchID) {
+			currentTouchID = -1;
+		}
+	}
+	/*** END MOBILE PAN GESTURE STUFF ***/
 	
 	void FixedUpdate () {
 		if (!gameManager.ShouldUpdate()) {

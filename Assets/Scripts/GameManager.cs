@@ -33,6 +33,9 @@ public class GameManager : MonoBehaviour {
 		var paddleOffset = Constants.FIELD_WIDTH_2 * 0.8f;
 		player1.position = new Vector3(-paddleOffset, 0, -10);
 		player2.position = new Vector3(paddleOffset, 0, -10);
+
+		player1.GetComponent<PaddleScript> ().PADDLE_X = -paddleOffset;
+		player1.GetComponent<PaddleScript> ().PADDLE_X = paddleOffset;
 		
 		ballScript.Start();
 	}
