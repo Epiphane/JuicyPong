@@ -1,22 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class BallScript : MonoBehaviour {
 	public ScoreManager scoreManager;
 	public float speed;
 	public float baseSpeed;
 	public Vector3 direction;
+
+	private Vector2 lastPosition;
+
 	private Animator animator;
 
 	public GameManager manager;
-
-	public ParticleSystem particles;
+	public PaddleObject lastHitPlayer;
+	private List<ParticleSystem> pendingParticles = new List<ParticleSystem>();
 
 	private GameObject visibleSprite;
 
 	public bool ghost = false;
 	public bool flamin = false;
 	public bool icy = false;
+
+	// Farticles (lol farts)
+	public GameObject impactParticles;
 
 	public void NormalizeDirection () {
 		if (Mathf.Abs(direction.x) < Mathf.Abs(direction.y)) {
@@ -45,6 +52,14 @@ public class BallScript : MonoBehaviour {
 			return;
 		}
 
+		// Release all pending particles
+		foreach (var particle in pendingParticles) {
+			particle.Play();
+			animator.SetTrigger("BallHitPaddle");
+		}
+
+		pendingParticles.Clear();
+
 		if (flamin) { // flames > ice.  They're "cooler" ahahaha
 			transform.position += direction * Time.deltaTime * speed * PowerupInfo.FIREBALL_SPEED_MULT;
 		}
@@ -53,26 +68,6 @@ public class BallScript : MonoBehaviour {
 		}
 		else {
 			transform.position += direction * Time.deltaTime * speed;
-		}
-
-		// Hit Bottom Ceiling
-		if (transform.position.y < -Constants.FIELD_HEIGHT_2) {
-			var pos = transform.position;
-			pos.y = -Constants.FIELD_HEIGHT_2;
-			transform.position = pos;
-			direction.y *= -1;
-			particles.Emit(30);
-			animator.SetTrigger("BallHitCeiling");
-		}
-		// Hit Top Ceiling
-		else if (transform.position.y > Constants.FIELD_HEIGHT_2) {
-			var pos = transform.position;
-			pos.y = Constants.FIELD_HEIGHT_2;
-			transform.position = pos;
-
-			direction.y *= -1;
-			particles.Emit(30);
-			animator.SetTrigger("BallHitCeiling");
 		}
 
 		// Hit score-zoooone
@@ -101,33 +96,68 @@ public class BallScript : MonoBehaviour {
 		else {
 			visibleSprite.GetComponent<SpriteRenderer>().color = Color.white;
 		}
+
+		lastPosition = transform.position;
 	} 
 
-	// Hit paddle
+	public void OnCollisionEnter2D(Collision2D collision) {
+		if (!manager.ShouldUpdate()) {
+			return;
+		}
+
+		// HIT CEILING
+		if (collision.gameObject.tag == "Ceiling") {
+			foreach (ContactPoint2D contact in collision.contacts) {
+				var particles = Instantiate (impactParticles, contact.point, Quaternion.identity) as GameObject;
+				var angle = Mathf.Atan2(contact.normal.x, contact.normal.y);
+				particles.transform.rotation = Quaternion.AngleAxis(Mathf.Rad2Deg * angle, Vector3.forward);
+				particles.GetComponent<ParticleSystem>().startColor = visibleSprite.GetComponent<SpriteRenderer>().color;
+			}
+			animator.SetTrigger("BallHitCeiling");
+			direction.y *= -1;
+		}
+		
+		// HIT PADDLE
+		if (collision.gameObject.tag == "Player") {
+			
+			if (flamin) { flamin = false; }
+			if (icy)    { icy = false; }
+			
+			var paddle = collision.gameObject.GetComponent<PaddleObject>();
+
+			direction.x *= -1;
+			lastHitPlayer = paddle;
+			paddle.HitBall();
+			
+			var dy = transform.position.y - collision.gameObject.transform.position.y;
+			direction.y = dy * 2;
+			
+			NormalizeDirection();
+
+			foreach (ContactPoint2D contact in collision.contacts) {
+				var particleObject = Instantiate (impactParticles, contact.point, Quaternion.identity) as GameObject;
+				var particles = particleObject.GetComponent<ParticleSystem>();
+				var angle = Mathf.Atan2(contact.normal.x, contact.normal.y);
+				particleObject.transform.rotation = Quaternion.AngleAxis(Mathf.Rad2Deg * -angle, Vector3.forward);
+				particles.startColor = visibleSprite.GetComponent<SpriteRenderer>().color;
+				particles.Pause ();
+
+				pendingParticles.Add(particles);
+			}
+		}
+	}
+
 	public void OnTriggerEnter2D (Collider2D other) {
 		if (!manager.ShouldUpdate()) {
 			return;
 		}
 
-		var boxCollider = other as BoxCollider2D;
-		var paddle = boxCollider.GetComponent<PaddleScript>();
-		if (boxCollider && paddle) {
-			
-			if (flamin) { flamin = false; }
-			if (icy)    { icy = false; }
-			
-			direction.x *= -1;
-
-			if (paddle) {
-				paddle.HitBall();
-
-				var dy = transform.position.y - boxCollider.transform.position.y;
-				direction.y = dy * 2;
+		// HIT COIN
+		var coin = other.GetComponent<CoinObject>();
+		if (coin && lastHitPlayer) {
+			if (lastHitPlayer.powerupUI) {
+				lastHitPlayer.powerupUI.AddPowerupProgress(50);
 			}
-
-			NormalizeDirection();
-			
-			animator.SetTrigger("BallHitPaddle");
 		}
 	}
 }

@@ -8,12 +8,12 @@ public class PowerupManager : MonoBehaviour {
 	public PowerupUI player2ui;
 	public BallScript ballHandle; // Ball fondlers
 
-	public PaddleScript player1; // Paddle fondlers
-	public PaddleScript player2;
-	PaddleScript[] players = new PaddleScript[3];
+	public PaddleObject player1; // Paddle fondlers
+	public PaddleObject player2;
+	PaddleObject[] players = new PaddleObject[3];
 
 	/** How much powerup progress does a paddle hit give? */
-	float hitIncrement = 100f;
+	float hitIncrement = 50f;
 
 	List<Powerup> activePowerups = new List<Powerup>();
 
@@ -62,7 +62,7 @@ public class PowerupManager : MonoBehaviour {
 	}
 
 	// Called when a powerup was just added to a player.
-	void StartPowerup(PowerupType powerup, PaddleScript player) {
+	void StartPowerup(PowerupType powerup, PaddleObject player) {
 		switch (powerup) {
 		case PowerupType.Fireball:  // ACTIVATE FIREBALL
 			ballHandle.flamin = true;
@@ -83,7 +83,7 @@ public class PowerupManager : MonoBehaviour {
 	}
 
 	// Called when a powerup is over and done
-	void EndPowerup(PowerupType powerup, PaddleScript player) {
+	void EndPowerup(PowerupType powerup, PaddleObject player) {
 		switch(powerup) {
 		case PowerupType.Magnet:
 			player.magnetized = false;
@@ -115,12 +115,12 @@ public class PowerupManager : MonoBehaviour {
 		}
 	}
 
-	void SpawnShield(PaddleScript player) {
+	void SpawnShield(PaddleObject player) {
 		var newShield = GameObject.Instantiate(Resources.Load ("Shield")) as GameObject;
 		newShield.transform.position = new Vector3(Constants.FIELD_WIDTH_2 * 0.95f * Mathf.Sign(player.transform.position.x), 0, 0);
 	}
 	
-	void SpawnPortals(PaddleScript player) {
+	void SpawnPortals(PaddleObject player) {
 		GameObject portal1 = GameObject.Instantiate(Resources.Load ("BluePortal")) as GameObject;
 		GameObject portal2 = GameObject.Instantiate(Resources.Load ("OrangePortal")) as GameObject;
 

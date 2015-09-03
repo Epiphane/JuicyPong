@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PaddleScript : MonoBehaviour {
+public class PaddleObject : MonoBehaviour {
 
 	public float PADDLE_X = 0;
 	public float PADDLE_Z = -10;
@@ -11,6 +11,7 @@ public class PaddleScript : MonoBehaviour {
 	public float dy = 0;
 	public float powerupProgress = 0f;
 	public PowerupManager powerupManager;
+	public PowerupUI powerupUI;
 	public GameManager gameManager;
 
 	public bool magnetized = false;

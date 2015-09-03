@@ -13,7 +13,7 @@ using System.Collections;
 public class PowerupUI : MonoBehaviour {
 
 	private int playerNum = 0;
-	public PaddleScript playerObject;
+	public PaddleObject playerObject;
 	public Canvas myCanvas;
 	public GameManager gameManager;
 	public PowerupManager powerupManager;
@@ -35,6 +35,9 @@ public class PowerupUI : MonoBehaviour {
 
 		choice1.color = Color.clear;
 		choice2.color = Color.clear;
+
+		playerNum = playerObject.playerNum;
+		playerObject.powerupUI = this;
 	}
 	
 	// Update is called once per frame. YA DON'T SAY!!?
@@ -82,6 +85,8 @@ public class PowerupUI : MonoBehaviour {
 		playerObject.powerupProgress += amount;
 
 		if (playerObject.powerupProgress >= 100) {
+			playerObject.powerupProgress = 0f;
+
 			// Powerup time!
 			currChoice = 0;
 			var choices = PowerupInfo.Choose2RandomPowerups();

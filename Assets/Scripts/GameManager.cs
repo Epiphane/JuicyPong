@@ -35,8 +35,8 @@ public class GameManager : MonoBehaviour {
 		player1.position = new Vector3(-paddleOffset, 0, -10);
 		player2.position = new Vector3(paddleOffset, 0, -10);
 
-		player1.GetComponent<PaddleScript> ().PADDLE_X = -paddleOffset;
-		player2.GetComponent<PaddleScript> ().PADDLE_X = paddleOffset;
+		player1.GetComponent<PaddleObject> ().PADDLE_X = -paddleOffset;
+		player2.GetComponent<PaddleObject> ().PADDLE_X = paddleOffset;
 		
 		ballScript.Start();
 	}
