@@ -37,6 +37,9 @@ public class PaddleObject : MonoBehaviour {
 	void PanBegan(Touch t) {
 		// Check if the gesture was on our side
 		var worldPoint = Camera.main.ScreenToWorldPoint(t.position);
+
+		print("World point: (" + worldPoint.x + ", " + worldPoint.y + ") Transform posn: (" + transform.position.x + ", " + transform.position.y + ", " + transform.position.z+")");
+
 		if (Mathf.Sign (worldPoint.x) == Mathf.Sign (transform.position.x) && currentTouchID == -1) {
 			currentTouchID = t.fingerId;
 		}
