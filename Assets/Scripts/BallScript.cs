@@ -79,6 +79,12 @@ public class BallScript : MonoBehaviour {
 		}
 	}
 
+	// The ball's trajectory can be modified by other stuff (magnets)
+	//  Make sure its direction is correct  
+	public void AdjustDirection() {
+
+	}
+
 	void LateUpdate() {
 		// Make ball sprite-face point forward
 		var angle = Mathf.Atan2(direction.y, direction.x);
