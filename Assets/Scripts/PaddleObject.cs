@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using TouchScript.Gestures;
 
 public class PaddleObject : MonoBehaviour {
 
@@ -16,49 +19,9 @@ public class PaddleObject : MonoBehaviour {
 
 	public bool magnetized = false;
 	public bool ghostly = false;
-
-	/**** MOBILE, PAN GESTURE STUFF ***/
-
-	private int currentTouchID = -1; // Each touch corresponds to a unique ID.  Each paddle only cares about 1 touch at a time, defined by this variable.
-
-	// Register for pan gesture events
-	private void OnEnable() {
-		MobileInputHandler.OnPanBegan += PanBegan;
-		MobileInputHandler.OnPanHeld += PanMoved;
-		MobileInputHandler.OnPanEnded+= PanEnded;
-	}
-
-	private void OnDisable() {
-		MobileInputHandler.OnPanBegan -= PanBegan;
-		MobileInputHandler.OnPanHeld -= PanMoved;
-		MobileInputHandler.OnPanEnded -= PanEnded;
-	}
-
-	void PanBegan(Touch t) {
-		// Check if the gesture was on our side
-		var worldPoint = Camera.main.ScreenToWorldPoint(t.position);
-
-		print("World point: (" + worldPoint.x + ", " + worldPoint.y + ") Transform posn: (" + transform.position.x + ", " + transform.position.y + ", " + transform.position.z+")");
-
-		if (Mathf.Sign (worldPoint.x) == Mathf.Sign (transform.position.x) && currentTouchID == -1) {
-			currentTouchID = t.fingerId;
-		}
-	}
-
-	public void PanMoved(Touch t) {
-		if (t.fingerId == currentTouchID) {
-			var worldPoint = Camera.main.ScreenToWorldPoint(t.position);
-			transform.position = new Vector3(PADDLE_X, worldPoint.y, PADDLE_Z);
-		}
-	}
-
-	public void PanEnded(Touch t) {
-		if (t.fingerId == currentTouchID) {
-			currentTouchID = -1;
-		}
-	}
-	/*** END MOBILE PAN GESTURE STUFF ***/
 	
+	public List<ShieldObject> activeShields = new List<ShieldObject>();
+
 	void FixedUpdate () {
 		if (!gameManager.ShouldUpdate()) {
 			return;
@@ -93,6 +56,23 @@ public class PaddleObject : MonoBehaviour {
 			else {
 				gameManager.ballScript.ghost = false;
 			}
+		}
+	}
+
+	public void AddShield() {
+		var newShieldObject = GameObject.Instantiate(Resources.Load ("Shield")) as GameObject;
+		var newShield = newShieldObject.GetComponent<ShieldObject>();
+		activeShields.Add(newShield);
+
+		newShield.baseX = Constants.FIELD_WIDTH_2 * 0.95f * Mathf.Sign(transform.position.x);
+		newShield.owner = this;
+
+		newShield.UpdatePosition();
+	}
+
+	public void TriggerShieldUpdate() {
+		foreach (var shield in activeShields) {
+			shield.UpdatePosition();
 		}
 	}
 

@@ -8,6 +8,8 @@ public class BallScript : MonoBehaviour {
 	public float baseSpeed;
 	public Vector3 direction;
 
+	public ParticleSystem buttParticles; // hehe butts
+
 	private Vector2 lastPosition;
 
 	private Animator animator;
@@ -49,7 +51,13 @@ public class BallScript : MonoBehaviour {
 	// Check if hit walls
 	public void FixedUpdate () {
 		if (!manager.ShouldUpdate()) {
+			buttParticles.Stop();
 			return;
+		}
+		else {
+			if (!buttParticles.isPlaying) {
+				buttParticles.Play ();
+			}
 		}
 
 		// Release all pending particles
@@ -91,16 +99,21 @@ public class BallScript : MonoBehaviour {
 		visibleSprite.transform.rotation = Quaternion.AngleAxis(Mathf.Rad2Deg * angle, Vector3.forward);
 
 		if (ghost) {
-			visibleSprite.GetComponent<SpriteRenderer>().color = new Color(1.0f, 1.0f, 1.0f, 0.2f);
+			var color = new Color(1.0f, 1.0f, 1.0f, 0.2f);
+			visibleSprite.GetComponent<SpriteRenderer>().color = color;
+			buttParticles.startColor = color;
 		}
 		else if (flamin) { // flames > ice.  They're "cooler" ahahaha
 			visibleSprite.GetComponent<SpriteRenderer>().color = Color.red;
+			buttParticles.startColor = Color.red;
 		}
 		else if (icy) {
 			visibleSprite.GetComponent<SpriteRenderer>().color = Color.blue;
+			buttParticles.startColor = Color.blue;
 		}
 		else {
 			visibleSprite.GetComponent<SpriteRenderer>().color = Color.white;
+			buttParticles.startColor = Color.white;
 		}
 
 		lastPosition = transform.position;
@@ -110,6 +123,7 @@ public class BallScript : MonoBehaviour {
 		if (!manager.ShouldUpdate()) {
 			return;
 		}
+
 
 		// HIT CEILING
 		if (collision.gameObject.tag == "Ceiling") {
@@ -164,6 +178,11 @@ public class BallScript : MonoBehaviour {
 			if (lastHitPlayer.powerupUI) {
 				lastHitPlayer.powerupUI.AddPowerupProgress(50);
 			}
+		}
+
+		var shield = other.GetComponent<ShieldObject>();
+		if (shield) {
+			direction.x *= -1;
 		}
 	}
 }

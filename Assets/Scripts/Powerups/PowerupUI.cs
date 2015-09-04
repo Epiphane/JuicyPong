@@ -2,6 +2,8 @@
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
+using TouchScript.Gestures;
+using System;
 
 /// <summary>
 /// Powerup UI handles all the UI for choosing and displaying powerups.
@@ -39,7 +41,7 @@ public class PowerupUI : MonoBehaviour {
 		playerNum = playerObject.playerNum;
 		playerObject.powerupUI = this;
 	}
-	
+
 	// Update is called once per frame. YA DON'T SAY!!?
 	void Update () {
 		var totalWidth = Screen.width / 2;
@@ -106,13 +108,17 @@ public class PowerupUI : MonoBehaviour {
 	}
 
 	public void ChosePowerup1() {
-		powerupManager.AddPowerup(playerNum, type1);
-		StopChoosing();
+		if (gameManager.gameState == GameState.ChoosePowerup) {
+			powerupManager.AddPowerup(playerNum, type1);
+			StopChoosing();
+		}
 	}
 
 	public void ChosePowerup2() {
-		powerupManager.AddPowerup(playerNum, type2);
-		StopChoosing();
+		if (gameManager.gameState == GameState.ChoosePowerup) {
+			powerupManager.AddPowerup(playerNum, type2);
+			StopChoosing();
+		}
 	}
 
 	void StopChoosing() {

@@ -13,7 +13,7 @@ public class PowerupManager : MonoBehaviour {
 	PaddleObject[] players = new PaddleObject[3];
 
 	/** How much powerup progress does a paddle hit give? */
-	float hitIncrement = 50f;
+	float hitIncrement = 20f;
 
 	List<Powerup> activePowerups = new List<Powerup>();
 
@@ -116,8 +116,7 @@ public class PowerupManager : MonoBehaviour {
 	}
 
 	void SpawnShield(PaddleObject player) {
-		var newShield = GameObject.Instantiate(Resources.Load ("Shield")) as GameObject;
-		newShield.transform.position = new Vector3(Constants.FIELD_WIDTH_2 * 0.95f * Mathf.Sign(player.transform.position.x), 0, 0);
+		player.AddShield();
 	}
 	
 	void SpawnPortals(PaddleObject player) {
@@ -127,8 +126,8 @@ public class PowerupManager : MonoBehaviour {
 		portal1.GetComponent<Portal>().matchingPortal = portal2.gameObject;
 		portal2.GetComponent<Portal>().matchingPortal = portal1.gameObject;
 
-		var randY1 = Random.Range (-Constants.FIELD_HEIGHT_2, Constants.FIELD_HEIGHT_2);
-		var randY2 = Random.Range (-Constants.FIELD_HEIGHT_2, Constants.FIELD_HEIGHT_2);
+		var randY1 = Random.Range (-Constants.FIELD_HEIGHT_2 * 0.8f, Constants.FIELD_HEIGHT_2 * 0.8f);
+		var randY2 = Random.Range (-Constants.FIELD_HEIGHT_2 * 0.8f, Constants.FIELD_HEIGHT_2 * 0.8f);
 
 		var randX1 = Random.Range(Constants.FIELD_WIDTH * 0.35f, Constants.FIELD_WIDTH * 0.6f) - Constants.FIELD_WIDTH_2;
 		var randX2 = Random.Range (Constants.FIELD_WIDTH * 0.1f, Constants.FIELD_WIDTH * 0.3f);
