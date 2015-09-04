@@ -44,7 +44,9 @@ public class PowerupUI : MonoBehaviour {
 
 	// Update is called once per frame. YA DON'T SAY!!?
 	void Update () {
-		var totalWidth = Screen.width / 2;
+		var parent = transform.parent as RectTransform;
+
+		var totalWidth = parent.rect.width;
 		var progressFraction = Mathf.Min(1, playerObject.powerupProgress / 100);
 		var barWidth = totalWidth * progressFraction;
 		var insetWidth = totalWidth - barWidth;
