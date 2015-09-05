@@ -52,6 +52,7 @@ public class PowerupInfo {
 			if (sumSoFar > random) {
 				firstType = powerup;
 				Debug.Log("Chose " + firstType + " first");
+				break;
 			}
 		}
 
@@ -63,6 +64,7 @@ public class PowerupInfo {
 				if (sumSoFar > random) {
 					secondType = powerup;
 					Debug.Log("Chose " + secondType + " second");
+					break;
 				}
 			}
 		} while (firstType == secondType);
