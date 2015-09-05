@@ -48,11 +48,9 @@ public class PowerupUI : MonoBehaviour {
 
 		var totalWidth = parent.rect.width;
 		var progressFraction = Mathf.Min(1, playerObject.powerupProgress / 100);
-		var barWidth = totalWidth * progressFraction;
-		var insetWidth = totalWidth - barWidth;
 
-		innerBarTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, insetWidth, barWidth);
-		
+		innerBarTransform.anchorMax = new Vector2(progressFraction, innerBarTransform.anchorMax.y);
+
 		var dy = Input.GetAxisRaw("P" + playerNum + " Vertical");
 		if (dy > 0.5) {
 			eventSystem.SetSelectedGameObject(choice1.gameObject);
