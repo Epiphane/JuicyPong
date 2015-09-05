@@ -4,13 +4,23 @@ using System.Collections.Generic;
 
 public class BallScript : MonoBehaviour {
 	public ScoreManager scoreManager;
-	public float speed;
+	public float speed {
+		get {
+			return baseSpeed * perGameSpeedup * perRoundSpeedup;
+		}
+	}
 	public float baseSpeed;
+
+	// Speeds up the ball as the entire game progresses
+	private float perGameSpeedup = 1f;
+	// Speeds up the ball per POINT played
+	private float perRoundSpeedup = 1f;
+
 	public Vector3 direction;
 
 	public ParticleSystem buttParticles; // hehe butts
 
-	private Vector2 lastPosition;
+	private Vector3 lastPosition;
 
 	private Animator animator;
 
@@ -27,11 +37,17 @@ public class BallScript : MonoBehaviour {
 	// Farticles (lol farts)
 	public GameObject impactParticles;
 
-	public void NormalizeDirection () {
-		if (Mathf.Abs(direction.x) < Mathf.Abs(direction.y)) {
-			direction.x = Mathf.Sign(direction.x) * Mathf.Abs(direction.y);
+	// Make sure ball doesn't bounce at too steep of an angle, that's annoying
+	public Vector3 LimitAngle(Vector3 angleDirection) {
+		if (Mathf.Abs(angleDirection.x) < Mathf.Abs(angleDirection.y)) {
+			angleDirection.x = Mathf.Sign(angleDirection.x) * Mathf.Abs(angleDirection.y);
 		}
-		
+
+		return angleDirection;
+	}
+
+	public void NormalizeDirection () {
+		direction = LimitAngle(direction);
 		direction.Normalize();
 	}
 
@@ -43,8 +59,6 @@ public class BallScript : MonoBehaviour {
 		
 		transform.position = new Vector3(0, 0, -10);
 		visibleSprite = transform.Find("ballSprite").gameObject;
-
-		baseSpeed = speed;
 	}
 
 
@@ -81,16 +95,35 @@ public class BallScript : MonoBehaviour {
 		// Hit score-zoooone
 		if (transform.position.x < -Constants.FIELD_WIDTH_2) {
 			scoreManager.GetPoint(2);  // get in the zooone
+			PointScored();
 		}
 		else if (transform.position.x > Constants.FIELD_WIDTH_2) {
 			scoreManager.GetPoint(1);  // scoooore-o zooooone
+			PointScored();
 		}
 	}
 
-	// The ball's trajectory can be modified by other stuff (magnets)
-	//  Make sure its direction is correct  
-	public void AdjustDirection() {
+	private void PointScored() {
+		perRoundSpeedup = 1f;
+		perGameSpeedup *= 1.03f;
 
+		flamin = icy = false;
+	}
+
+	// The ball's trajectory can be modified by other stuff (magnets)
+	//  Influence goes from 0 -> 1
+	public void MagnetTowardsPoint(Vector3 target, float influence) {
+		Vector3 influenceDirection = LimitAngle(target - transform.position);
+
+		if (Mathf.Sign (influenceDirection.x) != Mathf.Sign (direction.x)) {
+			influenceDirection.x *= -1f;
+		}
+
+		influenceDirection.Normalize();
+		influenceDirection *= influence;
+
+		direction = (influenceDirection + direction).normalized;
+		direction = LimitAngle(direction);
 	}
 
 	void LateUpdate() {
@@ -139,6 +172,8 @@ public class BallScript : MonoBehaviour {
 		
 		// HIT PADDLE
 		if (collision.gameObject.tag == "Player") {
+
+			perRoundSpeedup *= 1.05f;
 			
 			if (flamin) { flamin = false; }
 			if (icy)    { icy = false; }
