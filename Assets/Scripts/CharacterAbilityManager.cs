@@ -9,7 +9,7 @@ public class CharacterAbilityManager : MonoBehaviour {
 	public static float[] powerupLengthMod = new float[3] {0f, 1f, 1f};
 
 	public static float[] ballSpeedMod = new float[3] {0f, 1f, 1f};
-	public static float[] paddleSizeMod = new float[3] {0f, 1f, 1f};
+	public static float[] paddleSizeMod = new float[3] {0f, 1.5f, 1.5f};
 
 	public static float[] magnetAmplifier = new float[3] {0f, 1f, 1f};
 	public static float[] moreMagnets = new float[3] {0f, 1f, 1f};

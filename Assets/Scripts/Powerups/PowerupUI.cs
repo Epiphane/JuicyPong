@@ -84,14 +84,14 @@ public class PowerupUI : MonoBehaviour {
 			return;
 		}
 
-		playerObject.powerupProgress += amount;
+		playerObject.powerupProgress += amount * CharacterAbilityManager.powerupProgressMod[playerNum];
 
 		if (playerObject.powerupProgress >= 100) {
 			playerObject.powerupProgress = 0f;
 
 			// Powerup time!
 			currChoice = 0;
-			var choices = PowerupInfo.Choose2RandomPowerups();
+			var choices = PowerupInfo.Choose2RandomPowerups(playerObject.playerNum);
 			type1 = choices[0];
 			type2 = choices[1];
 

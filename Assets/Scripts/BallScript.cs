@@ -6,7 +6,11 @@ public class BallScript : MonoBehaviour {
 	public ScoreManager scoreManager;
 	public float speed {
 		get {
-			return baseSpeed * perGameSpeedup * perRoundSpeedup;
+			var abilitySpeedup = 1f;
+			if (lastHitPlayer != null) {
+				abilitySpeedup = CharacterAbilityManager.ballSpeedMod[lastHitPlayer.playerNum];
+			}
+			return baseSpeed * perGameSpeedup * perRoundSpeedup * abilitySpeedup;
 		}
 	}
 	public float baseSpeed;
@@ -94,12 +98,24 @@ public class BallScript : MonoBehaviour {
 
 		// Hit score-zoooone
 		if (transform.position.x < -Constants.FIELD_WIDTH_2) {
-			scoreManager.GetPoint(2);  // get in the zooone
-			PointScored();
+			if (Random.value < CharacterAbilityManager.autoShieldChance[1]) {
+				direction.x *= -1;
+				print ("AUTO SHIIIEEEEELLLLLD");
+			}
+			else {
+				scoreManager.GetPoint(2);  // get in the zooone
+				PointScored();
+			}
 		}
 		else if (transform.position.x > Constants.FIELD_WIDTH_2) {
-			scoreManager.GetPoint(1);  // scoooore-o zooooone
-			PointScored();
+			if (Random.value < CharacterAbilityManager.autoShieldChance[2]) {
+				direction.x *= -1;
+				print ("AUTO SHIIIEEEEELLLLLD");
+			}
+			else {
+				scoreManager.GetPoint(1);  // scoooore-o zooooone
+				PointScored();
+			}
 		}
 	}
 

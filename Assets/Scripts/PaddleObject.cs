@@ -46,9 +46,6 @@ public class PaddleObject : MonoBehaviour {
 			var diffX = Mathf.Abs(transform.position.x - gameManager.ballScript.transform.position.x) * 0.8f;
 			var influence = Mathf.Pow ((1 - diffX / Constants.FIELD_WIDTH - 0.2f), 10f) * 4.8f;
 
-			print (influence);
-
-//			gameManager.ballScript.transform.Translate(new Vector3(0f, diffY * influence, 0f));
 			gameManager.ballScript.MagnetTowardsPoint(transform.position, influence);
 		}
 
