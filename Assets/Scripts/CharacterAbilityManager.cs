@@ -2,7 +2,7 @@
 using System.Collections;
 
 public enum Character {
-	Paul, George, John, Dave, Ringo, Buster
+	Paul = 1, George, John, Dave, Ringo, Buster
 }
 
 // Hangs on to a bunch of static stuff which lets us
@@ -15,7 +15,7 @@ public class CharacterAbilityManager : MonoBehaviour {
 	public static float[] ballSpeedMod = new float[3] {0f, 1f, 1f};
 	public static float[] paddleSizeMod = new float[3] {0f, 1.5f, 1.5f};
 
-	public static float[] magnetAmplifier = new float[3] {0f, 1f, 1f};
+	public static float[] coinMagnetEnabled = new bool[3] {false, false, false};
 	public static float[] moreMagnets = new float[3] {0f, 1f, 1f};
 
 	public static float[] autoShieldChance = new float[3] {0f, 0f, 0f};
@@ -28,7 +28,7 @@ public class CharacterAbilityManager : MonoBehaviour {
 		ballSpeedMod = new float[3] {0f, 1f, 1f};
 		paddleSizeMod = new float[3] {0f, 1.5f, 1.5f};
 		
-		magnetAmplifier = new float[3] {0f, 1f, 1f};
+		coinMagnetEnabled = new bool[3] {false, false, false};
 		moreMagnets = new float[3] {0f, 1f, 1f};
 		
 		autoShieldChance = new float[3] {0f, 0f, 0f};
@@ -41,10 +41,10 @@ public class CharacterAbilityManager : MonoBehaviour {
 			CharacterAbilityManager.powerupLengthMod[playerNum] = 1.1f;
 			break;
 		case Character.George:
-			CharacterAbilityManager.paddleSizeMod[playerNum] *= 1.2f;
+			CharacterAbilityManager.paddleSizeMod[playerNum] *= 1.3f;
 			break;
 		case Character.John:
-			CharacterAbilityManager.magnetAmplifier[playerNum] = 1.3f;
+			CharacterAbilityManager.coinMagnetEnabled[playerNum] = true;
 			CharacterAbilityManager.moreMagnets[playerNum] = 1.3f;
 			break;
 		case Character.Dave:

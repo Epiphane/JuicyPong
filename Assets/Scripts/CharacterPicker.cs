@@ -2,75 +2,21 @@
 using System.Collections;
 
 public class CharacterPicker : MonoBehaviour {
-	private bool[] chosen = new bool[2];
-
-	public void Player1Chose1() {
-		CharacterAbilityManager.ActivateCharacter(1, Character.Dave);
-		PlayerChoseCharacter(1, 1);
-	}
-
-	public void Player1Chose2() {
-		CharacterAbilityManager.ActivateCharacter(1, Character.Ringo);
-		PlayerChoseCharacter(1, 2);
-	}
-
-	public void Player1Chose3() {
-		CharacterAbilityManager.ActivateCharacter(1, Character.Buster);
-		PlayerChoseCharacter(1, 3);
-	}
-
-	public void Player1Chose4() {
-		CharacterAbilityManager.ActivateCharacter(1, Character.John);
-		PlayerChoseCharacter(1, 4);
-	}
-
-	public void Player1Chose5() {
-		CharacterAbilityManager.ActivateCharacter(2, Character.George);
-		PlayerChoseCharacter(1, 5);
-	}
-
-	public void Player1Chose6() {
-		CharacterAbilityManager.ActivateCharacter(2, Character.Paul);
-		PlayerChoseCharacter(1, 6);
-	}
-
-	public void Player2Chose1() {
-		CharacterAbilityManager.ActivateCharacter(2, Character.Dave);
-		PlayerChoseCharacter(2, 1);
-	}
-	
-	public void Player2Chose2() {
-		CharacterAbilityManager.ActivateCharacter(2, Character.Ringo);
-		PlayerChoseCharacter(2, 2);
-	}
-	
-	public void Player2Chose3() {
-		CharacterAbilityManager.ActivateCharacter(2, Character.Buster);
-		PlayerChoseCharacter(2, 3);
-	}
-	
-	public void Player2Chose4() {
-		CharacterAbilityManager.ActivateCharacter(2, Character.John);
-		PlayerChoseCharacter(2, 4);
-	}
-	
-	public void Player2Chose5() {
-		CharacterAbilityManager.ActivateCharacter(2, Character.George);
-		PlayerChoseCharacter(2, 5);
-	}
-	
-	public void Player2Chose6() {
-		CharacterAbilityManager.ActivateCharacter(2, Character.Paul);
-		PlayerChoseCharacter(2, 6);
-	}
+	private bool[] chosen = new bool[3];
+	private int[] selectedChar = new int[3];
 
 	// Character was selected!  If both players have chosen, start the game.
 	public void PlayerChoseCharacter(int whoChose, int characterIndex) {
 		// (if local multiplayer)
-		var selectedButton = GameObject.Find ("MultiPlayerCanvas" + whoChose + "/Character Select Container/Character" + characterIndex);
+		selectedChar[whoChose] = characterIndex;
 
-		chosen[whoChose-1] = true;
-		if (chosen[0] && chosen[1]) {
+		chosen[whoChose] = true;
+		if (chosen[1] && chosen[2]) {
+			Character player1Char = (Character) selectedChar[1];
+			Character player2Char = (Character) selectedChar[2];
+
+			CharacterAbilityManager.ActivateCharacter(1, player1Char);
+			CharacterAbilityManager.ActivateCharacter(2, player2Char);
 			Application.LoadLevel ("Scene");
 		}
 	}
