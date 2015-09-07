@@ -78,6 +78,21 @@ public class BallScript : MonoBehaviour {
 			}
 		}
 
+		// Upgrade to magnet paddle makes ball attract coins - do that here
+		if (lastHitPlayer && lastHitPlayer.magnetized) {
+			CoinManager coins = (CoinManager)(FindObjectOfType(typeof(CoinManager)));
+			foreach (GameObject coin in coins.currentCoins) {
+				var distance = Vector3.Distance(coin.transform.position, transform.position);
+				print (distance);
+				if (distance < 3) {
+					var influence = 3/(distance + 0.1f) * 0.01f;
+					var diff = transform.position - coin.transform.position;
+
+					coin.transform.position += diff * influence;
+				}
+			}
+		}
+
 		// Release all pending particles
 		foreach (var particle in pendingParticles) {
 			particle.Play();
