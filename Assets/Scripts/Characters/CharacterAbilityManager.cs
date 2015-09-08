@@ -15,7 +15,7 @@ public class CharacterAbilityManager : MonoBehaviour {
 	public static float[] ballSpeedMod = new float[3] {0f, 1f, 1f};
 	public static float[] paddleSizeMod = new float[3] {0f, 1.5f, 1.5f};
 
-	public static float[] coinMagnetEnabled = new bool[3] {false, false, false};
+	public static bool[] coinMagnetEnabled = new bool[3] {false, false, false};
 	public static float[] moreMagnets = new float[3] {0f, 1f, 1f};
 
 	public static float[] autoShieldChance = new float[3] {0f, 0f, 0f};

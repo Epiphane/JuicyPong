@@ -17,7 +17,7 @@ public class CharacterPicker : MonoBehaviour {
 
 			CharacterAbilityManager.ActivateCharacter(1, player1Char);
 			CharacterAbilityManager.ActivateCharacter(2, player2Char);
-			Application.LoadLevel ("Scene");
+			Application.LoadLevel ("GameplayScene");
 		}
 	}
 }

@@ -51,7 +51,6 @@ public class PowerupInfo {
 			sumSoFar += PowerupChance(powerup, playerNum);
 			if (sumSoFar > random) {
 				firstType = powerup;
-				Debug.Log("Chose " + firstType + " first");
 				break;
 			}
 		}
@@ -63,7 +62,6 @@ public class PowerupInfo {
 				sumSoFar += PowerupChance(powerup, playerNum);
 				if (sumSoFar > random) {
 					secondType = powerup;
-					Debug.Log("Chose " + secondType + " second");
 					break;
 				}
 			}

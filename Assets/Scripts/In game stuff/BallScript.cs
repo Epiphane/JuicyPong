@@ -24,8 +24,6 @@ public class BallScript : MonoBehaviour {
 
 	public ParticleSystem buttParticles; // hehe butts
 
-	private Vector3 lastPosition;
-
 	private Animator animator;
 
 	public GameManager manager;
@@ -83,7 +81,7 @@ public class BallScript : MonoBehaviour {
 			CoinManager coins = (CoinManager)(FindObjectOfType(typeof(CoinManager)));
 			foreach (GameObject coin in coins.currentCoins) {
 				var distance = Vector3.Distance(coin.transform.position, transform.position);
-				print (distance);
+
 				if (distance < 3) {
 					var influence = 3/(distance + 0.1f) * 0.01f;
 					var diff = transform.position - coin.transform.position;
@@ -179,8 +177,6 @@ public class BallScript : MonoBehaviour {
 			visibleSprite.GetComponent<SpriteRenderer>().color = Color.white;
 			buttParticles.startColor = Color.white;
 		}
-
-		lastPosition = transform.position;
 	} 
 
 	public void OnCollisionEnter2D(Collision2D collision) {

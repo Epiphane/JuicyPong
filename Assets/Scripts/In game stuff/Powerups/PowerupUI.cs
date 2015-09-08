@@ -44,11 +44,7 @@ public class PowerupUI : MonoBehaviour {
 
 	// Update is called once per frame. YA DON'T SAY!!?
 	void Update () {
-		var parent = transform.parent as RectTransform;
-
-		var totalWidth = parent.rect.width;
 		var progressFraction = Mathf.Min(1, playerObject.powerupProgress / 100);
-
 		innerBarTransform.anchorMax = new Vector2(progressFraction, innerBarTransform.anchorMax.y);
 
 		var dy = Input.GetAxisRaw("P" + playerNum + " Vertical");

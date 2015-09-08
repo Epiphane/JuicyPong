@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour {
 	
 	public GUIText CountdownGUI;
 	public float timer = 3;
-	private float lastTime;
 
 	public GameState gameState = GameState.Playing;
 	
@@ -28,8 +27,6 @@ public class GameManager : MonoBehaviour {
 		timer = 3;
 //		Time.timeScale = 0;
 		Time.timeScale = 1;
-		
-		lastTime = Time.realtimeSinceStartup;
 
 		var paddleOffset = Constants.FIELD_WIDTH_2 * 0.8f;
 		player1.position = new Vector3(-paddleOffset, 0, -10);
