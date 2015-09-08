@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class WinScreenText : MonoBehaviour {
+public class WinScreenUI : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
