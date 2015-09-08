@@ -7,7 +7,7 @@ using System.Collections;
 public class TitleScreenManager : MonoBehaviour {
 
 	public void Awake() {
-
+		CharacterLevels.LoadSavedData();
 	}
 
 	public void StartLocalMultiplayer() {
