@@ -33,22 +33,32 @@ public class CharacterLevels : MonoBehaviour {
 	}
 
 	// Add experience from the Win Screen.  If we leveled up, return true, otherwise return false
-	public static bool AddExperience(int whichCharacter, int howMuch) {
-		characterExperience[whichCharacter] += howMuch;
+	public static bool AddExperience(Character character, int howMuch) {
+		int charNdx = (int) character;
+		characterExperience[charNdx] += howMuch;
 
 		// Check if leveled up
-		var currCharacterLevel = characterLevels[whichCharacter];
+		var currCharacterLevel = characterLevels[charNdx];
 		var nextLevelEXP = experiencePerLevel[currCharacterLevel-1];
-		if (characterExperience[whichCharacter] > nextLevelEXP) {
-			var remainder = characterExperience[whichCharacter] - nextLevelEXP;
-			characterLevels[whichCharacter]++;
+		if (characterExperience[charNdx] > nextLevelEXP) {
+			var remainder = characterExperience[charNdx] - nextLevelEXP;
+			characterLevels[charNdx]++;
 
-			characterExperience[whichCharacter] = remainder;
+			characterExperience[charNdx] = remainder;
 		
 			return true;
 		}
 
 		return false;
+	}
+
+	// Returns the fraction from 0 to 1 corresponding to how close the user is to levelin' up
+	public static float CharacterLevelProgress(Character character) {
+		int charNdx = (int) character;
+		var currCharacterLevel = characterLevels[charNdx];
+		float nextLevelEXP = (float) experiencePerLevel[currCharacterLevel-1];
+
+		return (float) characterExperience[charNdx] / nextLevelEXP;
 	}
 
 }

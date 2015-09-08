@@ -6,7 +6,13 @@ using System.Collections;
 // This has stuff that needs to happen whenever the user opens the app for the first time
 public class TitleScreenManager : MonoBehaviour {
 
-	public void Awake() {
+	public static bool didSetup = false;
+	public static void InitialGameSetup() {
+		if (didSetup) {
+			return;
+		}
+
+		didSetup = true;
 		CharacterLevels.LoadSavedData();
 	}
 

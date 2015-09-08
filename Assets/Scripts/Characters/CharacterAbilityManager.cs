@@ -9,6 +9,8 @@ public enum Character {
 //  apply each character's abilities
 public class CharacterAbilityManager : MonoBehaviour {
 
+	public static Character[] selectedCharacter = new Character[3] {Character.Paul, Character.Paul, Character.Paul}; // selectedCharacter[1] contains Player 1's choice, selectedCharacter[2] contains Player 2's choice
+
 	public static float[] powerupProgressMod = new float[3] {0f, 1f, 1f};
 	public static float[] powerupLengthMod = new float[3] {0f, 1f, 1f};
 
@@ -36,6 +38,8 @@ public class CharacterAbilityManager : MonoBehaviour {
 
 	// Set the global values that are used to apply character abilities
 	public static void ActivateCharacter(int playerNum, Character whichCharcter) {
+		selectedCharacter[playerNum] = whichCharcter;
+
 		switch (whichCharcter) {
 		case Character.Paul:
 			CharacterAbilityManager.powerupLengthMod[playerNum] = 1.1f;
