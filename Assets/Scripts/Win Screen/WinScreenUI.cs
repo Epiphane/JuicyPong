@@ -38,6 +38,8 @@ public class WinScreenUI : MonoBehaviour {
 
 	public Animator expPanelAnimation;
 
+	private Character[] selectedChar;
+
 	// Populate win screen info labels
 	void Start () {
 		Time.timeScale = 1;
@@ -57,12 +59,13 @@ public class WinScreenUI : MonoBehaviour {
 
 		Character player1 = CharacterAbilityManager.selectedCharacter[1];
 		Character player2 = CharacterAbilityManager.selectedCharacter[2];
+		selectedChar = new Character[3] {Character.Ringo, player1, player2};
 
 		targetBarFraction[1] = actualBarFraction[1] = CharacterLevels.CharacterLevelProgress(player1, 0);
 		targetBarFraction[2] = actualBarFraction[2] = CharacterLevels.CharacterLevelProgress(player2, 0);
 
-		player1WinLabel.text = player1.ToString() + ((ScoreManager.winner == 1) ? " WINS!" : " LOST!");
-		player2WinLabel.text = player2.ToString() + ((ScoreManager.winner == 2) ? " WINS!" : " LOST!");
+		player1WinLabel.text = selectedChar[1].ToString() + ((ScoreManager.winner == 1) ? " WINS!" : " LOST!");
+		player2WinLabel.text = selectedChar[2].ToString() + ((ScoreManager.winner == 2) ? " WINS!" : " LOST!");
 
 		player1LevelLabel.text = "LEVEL " + CharacterLevels.characterLevels[1];
 		player2LevelLabel.text = "LEVEL " + CharacterLevels.characterLevels[2];
@@ -92,8 +95,6 @@ public class WinScreenUI : MonoBehaviour {
 			tickTime[playerNdx] -= Time.deltaTime;
 			if (tickTime[playerNdx] <= 0) {
 
-				var myCharacter = CharacterAbilityManager.selectedCharacter[playerNdx];
-
 				if (pendingEXP[playerNdx] <= 0) {
 					int newState = (int) winScreenState; // increment winScreenState
 					newState++;
@@ -102,13 +103,13 @@ public class WinScreenUI : MonoBehaviour {
 				else {
 					tickTime[playerNdx] = 0.1f; // Decrement pending EXP and add it to the current player
 					pendingEXP[playerNdx] -= 5;
-					if (CharacterLevels.AddExperience(myCharacter, 5)) {
+					if (CharacterLevels.AddExperience(selectedChar[playerNdx], 5)) {
 						targetBarFraction[playerNdx] = 1.0f;
 						DoLevelUp(playerNdx);
 					}
 					else {
-						targetBarFraction[1] = CharacterLevels.CharacterLevelProgress(myCharacter, pendingEXP[1]);
-						targetBarFraction[2] = CharacterLevels.CharacterLevelProgress(myCharacter, pendingEXP[2]);
+						targetBarFraction[1] = CharacterLevels.CharacterLevelProgress(selectedChar[1], pendingEXP[1]);
+						targetBarFraction[2] = CharacterLevels.CharacterLevelProgress(selectedChar[2], pendingEXP[2]);
 					}
 				}
 			}
@@ -123,17 +124,14 @@ public class WinScreenUI : MonoBehaviour {
 
 			progressBarTransforms[playerNdx].anchorMax = new Vector2(actualBarFraction[playerNdx], progressBarTransforms[playerNdx].anchorMax.y);
 		}
-		
-		Character player1 = CharacterAbilityManager.selectedCharacter[1];
-		Character player2 = CharacterAbilityManager.selectedCharacter[2];
 
 		player1GainedExpLabel.text = "+" + pendingEXP[1] + " EXP";
 		player2GainedExpLabel.text = "+" + pendingEXP[2] + " EXP";
 
-		var player1Level = CharacterLevels.characterLevels[(int) player1];
-		var player2Level = CharacterLevels.characterLevels[(int) player2];
-		player1TotalExpLabel.text = "EXP: " + CharacterLevels.characterExperience[(int) player1] + " / " + CharacterLevels.experiencePerLevel[player1Level];
-		player2TotalExpLabel.text = "EXP: " + CharacterLevels.characterExperience[(int) player2] + " / " + CharacterLevels.experiencePerLevel[player2Level];
+		var player1Level = CharacterLevels.characterLevels[(int) selectedChar[1]];
+		var player2Level = CharacterLevels.characterLevels[(int) selectedChar[2]];
+		player1TotalExpLabel.text = "EXP: " + CharacterLevels.characterExperience[(int) selectedChar[1]] + " / " + CharacterLevels.experiencePerLevel[player1Level];
+		player2TotalExpLabel.text = "EXP: " + CharacterLevels.characterExperience[(int) selectedChar[2]] + " / " + CharacterLevels.experiencePerLevel[player2Level];
 	}
 
 	// User got to.. THE NEXT LEVEL OMG

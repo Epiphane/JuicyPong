@@ -24,7 +24,7 @@ public class JuiceScreenUI : MonoBehaviour {
 		myJuiceLabel.DoSqueeze();
 	}
 
-	void NicePressed() {
+	public void NicePressed() {
 		Application.LoadLevel ("TitleScreen");
 	}
 }
