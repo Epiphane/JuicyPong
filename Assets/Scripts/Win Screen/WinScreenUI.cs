@@ -24,16 +24,19 @@ public class WinScreenUI : MonoBehaviour {
 
 	public Text player1LevelLabel, player2LevelLabel;
 	public Text player1GainedExpLabel, player2GainedExpLabel;
+	public Text player1TotalExpLabel, player2TotalExpLabel;
 
 	public RectTransform player1ExpProgress, player2ExpProgress;
 
 	public float[] animDelay = new float[3] {0f, 0.5f, 0.2f};  // # of seconds before the "+X Exp" drains into the progress bar
 	private float[] tickTime = new float[3] {0f, 0f, 0f};
 
-	public int[] pendingEXP = new int[3] {0, 0, 0};
+	private int[] pendingEXP = new int[3] {0, 0, 0};
 	private float[] targetBarFraction = new float[3] {0, 0, 0};
-	public float[] actualBarFraction = new float[3] {0, 0, 0};
+	private float[] actualBarFraction = new float[3] {0, 0, 0};
 	private RectTransform[] progressBarTransforms = new RectTransform[3];
+
+	public Animator expPanelAnimation;
 
 	// Populate win screen info labels
 	void Start () {
@@ -55,9 +58,18 @@ public class WinScreenUI : MonoBehaviour {
 		Character player1 = CharacterAbilityManager.selectedCharacter[1];
 		Character player2 = CharacterAbilityManager.selectedCharacter[2];
 
-		targetBarFraction[1] = actualBarFraction[1] = CharacterLevels.CharacterLevelProgress(player1);
-		targetBarFraction[2] = actualBarFraction[2] = CharacterLevels.CharacterLevelProgress(player2);
+		targetBarFraction[1] = actualBarFraction[1] = CharacterLevels.CharacterLevelProgress(player1, 0);
+		targetBarFraction[2] = actualBarFraction[2] = CharacterLevels.CharacterLevelProgress(player2, 0);
 
+		player1WinLabel.text = player1.ToString() + ((ScoreManager.winner == 1) ? " WINS!" : " LOST!");
+		player2WinLabel.text = player2.ToString() + ((ScoreManager.winner == 2) ? " WINS!" : " LOST!");
+
+		player1LevelLabel.text = "LEVEL " + CharacterLevels.characterLevels[1];
+		player2LevelLabel.text = "LEVEL " + CharacterLevels.characterLevels[2];
+
+		UpdateProgressBars();
+
+		(FindObjectOfType(typeof(JuiceScreenUI)) as JuiceScreenUI).CalculateJuice();
 	}
 	
 	// Update is called once per frame
@@ -75,7 +87,6 @@ public class WinScreenUI : MonoBehaviour {
 
 	private void UpdatePlayerEXP(int playerNdx) {
 		animDelay[playerNdx] -= Time.deltaTime;
-		print ("Time: " + Time.deltaTime);
 		if (animDelay[playerNdx] <= 0) {
 
 			tickTime[playerNdx] -= Time.deltaTime;
@@ -96,7 +107,8 @@ public class WinScreenUI : MonoBehaviour {
 						DoLevelUp(playerNdx);
 					}
 					else {
-						targetBarFraction[playerNdx] = CharacterLevels.CharacterLevelProgress(myCharacter);
+						targetBarFraction[1] = CharacterLevels.CharacterLevelProgress(myCharacter, pendingEXP[1]);
+						targetBarFraction[2] = CharacterLevels.CharacterLevelProgress(myCharacter, pendingEXP[2]);
 					}
 				}
 			}
@@ -107,10 +119,21 @@ public class WinScreenUI : MonoBehaviour {
 	private void UpdateProgressBars() {
 		for (int playerNdx = 1; playerNdx <= 2; playerNdx++) {
 			var diff = targetBarFraction[playerNdx] - actualBarFraction[playerNdx];
-			actualBarFraction[playerNdx] += diff/4;
+			actualBarFraction[playerNdx] += diff/8;
 
 			progressBarTransforms[playerNdx].anchorMax = new Vector2(actualBarFraction[playerNdx], progressBarTransforms[playerNdx].anchorMax.y);
 		}
+		
+		Character player1 = CharacterAbilityManager.selectedCharacter[1];
+		Character player2 = CharacterAbilityManager.selectedCharacter[2];
+
+		player1GainedExpLabel.text = "+" + pendingEXP[1] + " EXP";
+		player2GainedExpLabel.text = "+" + pendingEXP[2] + " EXP";
+
+		var player1Level = CharacterLevels.characterLevels[(int) player1];
+		var player2Level = CharacterLevels.characterLevels[(int) player2];
+		player1TotalExpLabel.text = "EXP: " + CharacterLevels.characterExperience[(int) player1] + " / " + CharacterLevels.experiencePerLevel[player1Level];
+		player2TotalExpLabel.text = "EXP: " + CharacterLevels.characterExperience[(int) player2] + " / " + CharacterLevels.experiencePerLevel[player2Level];
 	}
 
 	// User got to.. THE NEXT LEVEL OMG
@@ -124,10 +147,16 @@ public class WinScreenUI : MonoBehaviour {
 
 
 	}
-
 	
 
 	public void ContinueButtonPressed() {
+		if (winScreenState == WinScreenState.EXPScreenContinueReady) {
+			expPanelAnimation.SetTrigger("ShowJuice");
+			Invoke ("SqueezeJuice", 1.5f);
+		}
+	}
 
+	public void SqueezeJuice() {
+		(FindObjectOfType(typeof(JuiceScreenUI)) as JuiceScreenUI).SqueezeJuice();
 	}
 }

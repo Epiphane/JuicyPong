@@ -14,6 +14,7 @@ public class TitleScreenManager : MonoBehaviour {
 
 		didSetup = true;
 		CharacterLevels.LoadSavedData();
+		JuicePointManager.LoadJuice();
 	}
 
 	public void StartLocalMultiplayer() {

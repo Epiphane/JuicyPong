@@ -53,12 +53,13 @@ public class CharacterLevels : MonoBehaviour {
 	}
 
 	// Returns the fraction from 0 to 1 corresponding to how close the user is to levelin' up
-	public static float CharacterLevelProgress(Character character) {
+	public static float CharacterLevelProgress(Character character, int pendingEXP) {
 		int charNdx = (int) character;
 		var currCharacterLevel = characterLevels[charNdx];
 		float nextLevelEXP = (float) experiencePerLevel[currCharacterLevel-1];
 
-		return (float) characterExperience[charNdx] / nextLevelEXP;
+		float result = (pendingEXP + characterExperience[charNdx]) / nextLevelEXP;
+		return Mathf.Min(1f, result);
 	}
 
 }
