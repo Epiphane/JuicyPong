@@ -10,7 +10,7 @@ public class ScoreManager : MonoBehaviour {
 	public int[] scores = {0, 0};
 
 	public static int winner;
-	public const int WIN_SCORE = 1;
+	public const int WIN_SCORE = 5;
 
 	public void GetPoint(int player) {
 		if (player == 1) {

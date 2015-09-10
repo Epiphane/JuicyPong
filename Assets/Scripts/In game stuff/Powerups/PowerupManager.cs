@@ -65,7 +65,9 @@ public class PowerupManager : MonoBehaviour {
 	void StartPowerup(PowerupType powerup, PaddleObject player) {
 		switch (powerup) {
 		case PowerupType.Fireball:  // ACTIVATE FIREBALL
-			ballHandle.flamin = true;
+            if (ballHandle.lastHitPlayer == player) {
+                ballHandle.flamin = true;
+            }
 			break;
 		case PowerupType.Magnet:
 			player.magnetized = true;

@@ -26,6 +26,8 @@ public class Portal : MonoBehaviour {
 
 			cooldown = 0.8f;
 			matchingPortal.GetComponent<Portal>().cooldown = 0.8f;
-		}
+
+            GetComponent<Animator>().SetTrigger("PortalBounce");
+        }
 	}
 }
