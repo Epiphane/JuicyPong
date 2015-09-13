@@ -83,8 +83,6 @@ public class PowerupUI : MonoBehaviour {
 		playerObject.powerupProgress += amount * CharacterAbilityManager.powerupProgressMod[playerNum];
 
 		if (playerObject.powerupProgress >= 100) {
-			playerObject.powerupProgress = 0f;
-
 			// Powerup time!
 			currChoice = 0;
 			var choices = PowerupInfo.Choose2RandomPowerups(playerObject.playerNum);
@@ -100,18 +98,18 @@ public class PowerupUI : MonoBehaviour {
             GameManager.gameState = GameState.ChoosePowerup;
 			choice1.GetComponent<Button>().interactable = true;
 			choice2.GetComponent<Button>().interactable = true;
-		}
+        }
 	}
 
 	public void ChosePowerup1() {
-		if (GameManager.gameState == GameState.ChoosePowerup) {
+		if (GameManager.gameState == GameState.ChoosePowerup && playerObject.powerupProgress >= 100f) {
 			powerupManager.AddPowerup(playerNum, type1);
 			StopChoosing();
 		}
 	}
 
 	public void ChosePowerup2() {
-		if (GameManager.gameState == GameState.ChoosePowerup) {
+		if (GameManager.gameState == GameState.ChoosePowerup && playerObject.powerupProgress >= 100f) {
 			powerupManager.AddPowerup(playerNum, type2);
 			StopChoosing();
 		}
@@ -124,5 +122,7 @@ public class PowerupUI : MonoBehaviour {
 		
 		choice1.color = Color.clear;
 		choice2.color = Color.clear;
-	}
+
+        playerObject.powerupProgress = 0f;
+    }
 }

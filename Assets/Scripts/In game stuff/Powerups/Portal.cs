@@ -8,6 +8,7 @@ public class Portal : MonoBehaviour {
     const float PORTAL_COOLDOWN = 0.5f;
 
 	public float lifeLeft = 10;
+    public Color particleColor;
 
 	void Update() {
 		cooldown -= Time.deltaTime;
@@ -34,10 +35,15 @@ public class Portal : MonoBehaviour {
             GetComponent<Animator>().SetTrigger("PortalBounce");
             matchingPortal.GetComponent<Animator>().SetTrigger("PortalBounceExit");
 
-            var particleObject = Instantiate(Resources.Load("Portal Particles")) as GameObject;
+            var particleObject = Instantiate(Resources.Load("PortalImpactParticles")) as GameObject;
             var particles = particleObject.GetComponent<ParticleSystem>();
+            var angle = Mathf.Atan2(ball.direction.y, ball.direction.x);
+            particleObject.transform.rotation = Quaternion.AngleAxis(Mathf.Rad2Deg * -angle, Vector3.forward);
 
-            particleObject.transform.position = ball.transform;
+            var newPos = matchingPortal.transform.position + new Vector3(0, 0, 0.2f);
+            particleObject.transform.position = newPos;
+
+            particles.startColor = matchingPortal.GetComponent<Portal>().particleColor;
         }
     }
 }
