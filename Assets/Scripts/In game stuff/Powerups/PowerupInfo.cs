@@ -91,6 +91,8 @@ public class PowerupInfo {
 
 	public static float FIREBALL_SPEED_MULT = 2f;
 	public static float ICEBALL_SPEED_MULT = 0.5f;
+
+    public static Color GHOST_COLOR = new Color(1.0f, 1.0f, 1.0f, 0.08f);
 }
 
 public class Powerup {

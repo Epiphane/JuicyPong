@@ -23,7 +23,7 @@ public class PaddleObject : MonoBehaviour {
 	public List<ShieldObject> activeShields = new List<ShieldObject>();
 
 	void FixedUpdate () {
-		if (!gameManager.ShouldUpdate()) {
+		if (!GameManager.ShouldUpdate()) {
 			return;
 		}
 

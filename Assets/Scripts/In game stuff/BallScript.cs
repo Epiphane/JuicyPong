@@ -36,8 +36,8 @@ public class BallScript : MonoBehaviour {
 	public bool flamin = false;
 	public bool icy = false;
 
-	// Farticles (lol farts)
-	public GameObject impactParticles;
+    // Farticles (lol farts)
+    public GameObject impactParticles;
 
 	// Make sure ball doesn't bounce at too steep of an angle, that's annoying
 	public Vector3 LimitAngle(Vector3 angleDirection) {
@@ -66,7 +66,7 @@ public class BallScript : MonoBehaviour {
 
 	// Check if hit walls
 	public void FixedUpdate () {
-		if (!manager.ShouldUpdate()) {
+		if (!GameManager.ShouldUpdate()) {
 			buttParticles.Stop();
 			return;
 		}
@@ -161,9 +161,8 @@ public class BallScript : MonoBehaviour {
 		visibleSprite.transform.rotation = Quaternion.AngleAxis(Mathf.Rad2Deg * angle, Vector3.forward);
 
 		if (ghost) {
-			var color = new Color(1.0f, 1.0f, 1.0f, 0.2f);
-			visibleSprite.GetComponent<SpriteRenderer>().color = color;
-			buttParticles.startColor = color;
+			visibleSprite.GetComponent<SpriteRenderer>().color = PowerupInfo.GHOST_COLOR;
+			buttParticles.startColor = PowerupInfo.GHOST_COLOR;
 		}
 		else if (flamin) { // flames > ice.  They're "cooler" ahahaha
 			visibleSprite.GetComponent<SpriteRenderer>().color = Color.red;
@@ -176,11 +175,13 @@ public class BallScript : MonoBehaviour {
 		else {
 			visibleSprite.GetComponent<SpriteRenderer>().color = Color.white;
 			buttParticles.startColor = Color.white;
-		}
-	} 
+        }
+
+        GetComponent<JuicyShadow>().ghostlyShadow = ghost;
+    } 
 
 	public void OnCollisionEnter2D(Collision2D collision) {
-		if (!manager.ShouldUpdate()) {
+		if (!GameManager.ShouldUpdate()) {
 			return;
 		}
 
@@ -230,7 +231,7 @@ public class BallScript : MonoBehaviour {
 	}
 
 	public void OnTriggerEnter2D (Collider2D other) {
-		if (!manager.ShouldUpdate()) {
+		if (!GameManager.ShouldUpdate()) {
 			return;
 		}
 

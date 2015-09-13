@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour {
 	public GUIText CountdownGUI;
 	public float timer = 3;
 
-	public GameState gameState = GameState.Playing;
+	public static GameState gameState = GameState.Playing;
 	
 	void Awake() {
 //		Time.timeScale = 0;
@@ -63,8 +63,8 @@ public class GameManager : MonoBehaviour {
 	}
 
 	// Helps us stop movement if the user is choosing a powerup or the game is over
-	public bool ShouldUpdate() {
-		if (gameState == GameState.Playing) {
+	public static bool ShouldUpdate() {
+		if (GameManager.gameState == GameState.Playing) {
 			return true;
 		}
 		return false;

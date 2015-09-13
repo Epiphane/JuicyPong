@@ -51,13 +51,13 @@ public class PowerupUI : MonoBehaviour {
 		if (dy > 0.5) {
 			eventSystem.SetSelectedGameObject(choice1.gameObject);
 			choice1.color = Color.white;
-			choice2.color = Color.gray;
+			choice2.color = Color.white;
 			currChoice = 1;
 		}
 		else if (dy < -0.5) {
 			eventSystem.SetSelectedGameObject(choice2.gameObject);
 			choice2.color = Color.white;
-			choice1.color = Color.gray;
+            choice1.color = Color.white;
 			currChoice = 2;
 		}
 
@@ -76,7 +76,7 @@ public class PowerupUI : MonoBehaviour {
 	/// </summary>
 	/// <param name="amount">How much? (you get a powerup at 100)</param>
 	public void AddPowerupProgress(float amount) {
-		if (!gameManager.ShouldUpdate()) {
+		if (!GameManager.ShouldUpdate()) {
 			return;
 		}
 
@@ -92,33 +92,33 @@ public class PowerupUI : MonoBehaviour {
 			type2 = choices[1];
 
 			choice1.text = PowerupInfo.Name(type1);
-			choice1.color = Color.gray;
+			choice1.color = Color.white;
 			
 			choice2.text = PowerupInfo.Name(type2);
-			choice2.color = Color.gray;
+			choice2.color = Color.white;
 
-			gameManager.gameState = GameState.ChoosePowerup;
+            GameManager.gameState = GameState.ChoosePowerup;
 			choice1.GetComponent<Button>().interactable = true;
 			choice2.GetComponent<Button>().interactable = true;
 		}
 	}
 
 	public void ChosePowerup1() {
-		if (gameManager.gameState == GameState.ChoosePowerup) {
+		if (GameManager.gameState == GameState.ChoosePowerup) {
 			powerupManager.AddPowerup(playerNum, type1);
 			StopChoosing();
 		}
 	}
 
 	public void ChosePowerup2() {
-		if (gameManager.gameState == GameState.ChoosePowerup) {
+		if (GameManager.gameState == GameState.ChoosePowerup) {
 			powerupManager.AddPowerup(playerNum, type2);
 			StopChoosing();
 		}
 	}
 
 	void StopChoosing() {
-		gameManager.gameState = GameState.Playing;
+        GameManager.gameState = GameState.Playing;
 		choice1.GetComponent<Button>().interactable = false;
 		choice2.GetComponent<Button>().interactable = false;
 		
