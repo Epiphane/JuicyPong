@@ -37,8 +37,7 @@ public class Portal : MonoBehaviour {
             var particleObject = Instantiate(Resources.Load("Portal Particles")) as GameObject;
             var particles = particleObject.GetComponent<ParticleSystem>();
 
-            particleObject.transform.parent = ball.transform;
-            particleObject.transform.position = Vector3.zero;
+            particleObject.transform.position = ball.transform;
         }
     }
 }
