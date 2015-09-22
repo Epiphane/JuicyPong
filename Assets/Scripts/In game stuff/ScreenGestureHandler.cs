@@ -50,8 +50,8 @@ public class ScreenGestureHandler : MonoBehaviour {
 	public void PanMoved(object sender, EventArgs e) {
 		var panGesture = sender as PanGesture;
 		var worldPoint = Camera.main.ScreenToWorldPoint(panGesture.ScreenPosition);
-		
-		player.transform.position = new Vector3(player.PADDLE_X, worldPoint.y, player.PADDLE_Z);
+
+        player.targetY = worldPoint.y;
 	}
 
     // Pan ended.  Set the paddle down.

@@ -19,17 +19,32 @@ public class PaddleObject : MonoBehaviour {
 
 	public bool magnetized = false;
 	public bool ghostly = false;
+
+    public Vector3 baseScale = Vector3.one;
+    public float scaleModifier = 1f; // Used to animate the scale relative to the paddle's normal scale
 	
 	public List<ShieldObject> activeShields = new List<ShieldObject>();
 
+    public float targetY = 0; // The last point the user dragged to.  We'll smoothly glide there.
+    
+    void LateUpdate() {
+        transform.localScale = baseScale * scaleModifier;
+        Debug.Log(transform.localScale + ", " + scaleModifier);
+    }
+
 	void FixedUpdate () {
-		if (!GameManager.ShouldUpdate()) {
+        if (Application.isMobilePlatform) {
+            var diff = targetY - transform.position.y;
+            transform.Translate(new Vector3(0, diff / 4, 0));
+        }
+
+        if (!GameManager.ShouldUpdate()) {
 			return;
 		}
 
 		dy = Input.GetAxisRaw("P" + playerNum + " Vertical") * speed;
 		transform.position += new Vector3(0, dy * Time.deltaTime, 0);
-		
+
 		if (transform.position.y < -Constants.FIELD_HEIGHT_2) {
 			var pos = transform.position;
 			pos.y = -Constants.FIELD_HEIGHT_2;

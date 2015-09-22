@@ -30,9 +30,9 @@ public class GameManager : MonoBehaviour {
 
 		var paddleOffset = Constants.FIELD_WIDTH_2 * 0.8f;
 		player1.position = new Vector3(-paddleOffset, 0, -10);
-		player1.localScale = new Vector3(2f, CharacterAbilityManager.paddleSizeMod[1], 1f);
+		player1.GetComponent<PaddleObject>().baseScale = new Vector3(2f, CharacterAbilityManager.paddleSizeMod[1], 1f);
 		player2.position = new Vector3(paddleOffset, 0, -10);
-		player2.localScale = new Vector3(2f, CharacterAbilityManager.paddleSizeMod[2], 1f);
+		player2.GetComponent<PaddleObject>().baseScale = new Vector3(2f, CharacterAbilityManager.paddleSizeMod[2], 1f);
 
 		player1.GetComponent<PaddleObject> ().PADDLE_X = -paddleOffset;
 		player2.GetComponent<PaddleObject> ().PADDLE_X = paddleOffset;
