@@ -33,10 +33,10 @@ public class PaddleObject : MonoBehaviour {
     }
 
 	void FixedUpdate () {
-        if (Application.isMobilePlatform) {
+        //if (Application.isMobilePlatform) {
             var diff = targetY - transform.position.y;
             transform.Translate(new Vector3(0, diff / 4, 0));
-        }
+        //}
 
         if (!GameManager.ShouldUpdate()) {
 			return;
