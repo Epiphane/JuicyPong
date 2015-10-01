@@ -29,7 +29,6 @@ public class PaddleObject : MonoBehaviour {
     
     void LateUpdate() {
         transform.localScale = baseScale * scaleModifier;
-        Debug.Log(transform.localScale + ", " + scaleModifier);
     }
 
 	void FixedUpdate () {

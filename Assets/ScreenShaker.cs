@@ -3,9 +3,11 @@ using System.Collections;
 
 public class ScreenShaker : MonoBehaviour {
 
+    public static ScreenShaker me;
+
 	// Use this for initialization
-	void Start () {
-	
+	void Awake() {
+        me = this;
 	}
 
     private float screenShakiness = 0f;
