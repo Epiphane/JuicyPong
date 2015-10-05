@@ -31,7 +31,14 @@ public class ScreenGestureHandler : MonoBehaviour {
 		GetComponent<PanGesture>().PanCompleted += PanEnded;
 
         GetComponent<TapGesture>().Tapped += Tapped;
-	}
+
+
+        player.GetComponent<PanGesture>().PanStarted += PanBegan;
+        player.GetComponent<PanGesture>().Panned += PanMoved;
+        player.GetComponent<PanGesture>().PanCompleted += PanEnded;
+
+        player.GetComponent<TapGesture>().Tapped += Tapped;
+    }
 	
 	private void OnDisable() {
 		GetComponent<PanGesture>().PanStarted -= PanBegan;
@@ -39,7 +46,14 @@ public class ScreenGestureHandler : MonoBehaviour {
 		GetComponent<PanGesture>().PanCompleted -= PanEnded;
 
         GetComponent<TapGesture>().Tapped -= Tapped;
-	}
+
+
+        player.GetComponent<PanGesture>().PanStarted -= PanBegan;
+        player.GetComponent<PanGesture>().Panned -= PanMoved;
+        player.GetComponent<PanGesture>().PanCompleted -= PanEnded;
+
+        player.GetComponent<TapGesture>().Tapped -= Tapped;
+    }
 	
     // Finger down!  Tell the animation system to raise the paddle
 	void PanBegan(object sender, EventArgs e) {

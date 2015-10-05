@@ -125,7 +125,10 @@ public class PowerupManager : MonoBehaviour {
 		GameObject portal1 = GameObject.Instantiate(Resources.Load ("BluePortal")) as GameObject;
 		GameObject portal2 = GameObject.Instantiate(Resources.Load ("OrangePortal")) as GameObject;
 
-		portal1.GetComponent<Portal>().matchingPortal = portal2.gameObject;
+        portal1.transform.parent = ((ScreenShaker) FindObjectOfType(typeof(ScreenShaker))).transform;
+        portal2.transform.parent = ((ScreenShaker)FindObjectOfType(typeof(ScreenShaker))).transform;
+
+        portal1.GetComponent<Portal>().matchingPortal = portal2.gameObject;
 		portal2.GetComponent<Portal>().matchingPortal = portal1.gameObject;
 
 		var randY1 = Random.Range (-Constants.FIELD_HEIGHT_2 * 0.8f, Constants.FIELD_HEIGHT_2 * 0.8f);
