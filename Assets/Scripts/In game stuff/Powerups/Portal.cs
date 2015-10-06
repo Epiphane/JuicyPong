@@ -7,30 +7,24 @@ public class Portal : MonoBehaviour {
 	float cooldown = 0;
     const float PORTAL_COOLDOWN = 0.5f;
 
-	public float lifeLeft = 10;
+	public int warpsLeft = 4;
     public Color particleColor;
 
 	void Update() {
 		cooldown -= Time.deltaTime;
-        
-        if (GameManager.ShouldUpdate()) {
-            lifeLeft -= Time.deltaTime;
-        }
-
-        if (lifeLeft <= 0) {
-			Destroy(gameObject);
-		}
 	}
 	
 	public void OnTriggerEnter2D (Collider2D other) {
 
 		var ball = other.gameObject.GetComponent<BallScript>();
 		if (ball != null && cooldown <= 0) {
+            var otherPortal = matchingPortal.GetComponent<Portal>();
+
 			var diff = matchingPortal.transform.position - transform.position;
 			ball.transform.Translate(diff);
 
             cooldown = PORTAL_COOLDOWN;
-            matchingPortal.GetComponent<Portal>().cooldown = PORTAL_COOLDOWN;
+            otherPortal.cooldown = PORTAL_COOLDOWN;
 
             GetComponent<Animator>().SetTrigger("PortalBounce");
             matchingPortal.GetComponent<Animator>().SetTrigger("PortalBounceExit");
@@ -43,7 +37,15 @@ public class Portal : MonoBehaviour {
             var newPos = matchingPortal.transform.position + new Vector3(0, 0, 0.2f);
             particleObject.transform.position = newPos;
 
-            particles.startColor = matchingPortal.GetComponent<Portal>().particleColor;
+            particles.startColor = otherPortal.particleColor;
+
+            warpsLeft--;
+            otherPortal.warpsLeft--;
+
+            if (warpsLeft <= 0) {
+                Destroy(gameObject);
+                Destroy(matchingPortal);
+            }
         }
     }
 }

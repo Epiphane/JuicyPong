@@ -16,7 +16,7 @@ public class ScreenShaker : MonoBehaviour {
 	void Update () {
         transform.position = new Vector3(Random.Range(-screenShakiness, screenShakiness), Random.Range(-screenShakiness, screenShakiness), 
             Random.Range(-screenShakiness, screenShakiness));
-        screenShakiness *= 0.9f;
+        screenShakiness *= 0.8f;
 	}
 
     public void ShakeScreen(float shakeValue) {

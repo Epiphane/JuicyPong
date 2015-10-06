@@ -138,7 +138,7 @@ public class BallScript : MonoBehaviour {
 
 		flamin = icy = false;
 
-        FindObjectOfType<ScreenShaker>().ShakeScreen(0.3f);
+        FindObjectOfType<ScreenShaker>().ShakeScreen(0.7f);
 	}
 
 	// The ball's trajectory can be modified by other stuff (magnets)
