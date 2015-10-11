@@ -35,7 +35,9 @@ public class JuicyShadow : MonoBehaviour {
                                                     -shadowElevation / transform.localScale.y, 0);
 
         if (ghostlyShadow) {
-            shadow.GetComponent<SpriteRenderer>().color = PowerupInfo.GHOST_COLOR;
+            var currColor = shadow.GetComponent<SpriteRenderer>().color;
+            currColor.a = PowerupInfo.GHOST_COLOR;
+            shadow.GetComponent<SpriteRenderer>().color = currColor;
         }
         else {
             shadow.GetComponent<SpriteRenderer>().color = normalColor;

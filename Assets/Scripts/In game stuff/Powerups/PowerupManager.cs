@@ -69,6 +69,9 @@ public class PowerupManager : MonoBehaviour {
                 ballHandle.flamin = true;
             }
 			break;
+        case PowerupType.Iceball:
+            player.icy = true;
+            break;
 		case PowerupType.Magnet:
 			player.magnetized = true;
 			break;
@@ -90,7 +93,10 @@ public class PowerupManager : MonoBehaviour {
 		case PowerupType.Magnet:
 			player.magnetized = false;
 			break;
-		case PowerupType.Ghost:
+        case PowerupType.Iceball:
+            player.icy = false;
+            break;
+        case PowerupType.Ghost:
 			player.ghostly = false;
 			ballHandle.ghost = false;
 			break;
@@ -109,11 +115,6 @@ public class PowerupManager : MonoBehaviour {
 	// Called when a player with a powerup's ENEMY hit the ball
 	void DoEnemyHit(PowerupType powerup) {
 		switch(powerup) {
-		case PowerupType.Fireball: // nothin
-			break;
-		case PowerupType.Iceball: // ACTIVATE ICE
-			ballHandle.icy = true;
-			break;
 		}
 	}
 

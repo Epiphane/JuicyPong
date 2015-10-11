@@ -34,7 +34,7 @@ public class BallScript : MonoBehaviour {
 
 	public bool ghost = false;
 	public bool flamin = false;
-	public bool icy = false;
+    public float iciness = 0.0f; // 0-1 how icy the ball is. 1 is fully blue + speed cut in half
 
     // Farticles (lol farts)
     public GameObject impactParticles;
@@ -99,14 +99,13 @@ public class BallScript : MonoBehaviour {
 
 		pendingParticles.Clear();
 
+        var currSpeed = speed - speed * PowerupInfo.ICEBALL_SPEED_MULT * iciness;
+
 		if (flamin) { // flames > ice.  They're "cooler" ahahaha
-			transform.position += direction * Time.deltaTime * speed * PowerupInfo.FIREBALL_SPEED_MULT;
-		}
-		else if (icy) {
-			transform.position += direction * Time.deltaTime * speed * PowerupInfo.ICEBALL_SPEED_MULT;
+			transform.position += direction * Time.deltaTime * currSpeed * PowerupInfo.FIREBALL_SPEED_MULT;
 		}
 		else {
-			transform.position += direction * Time.deltaTime * speed;
+			transform.position += direction * Time.deltaTime * currSpeed;
 		}
 
 		// Hit score-zoooone
@@ -132,11 +131,15 @@ public class BallScript : MonoBehaviour {
 		}
 	}
 
+    public void Update() {
+        iciness = 0; // Reset in case a paddle ended its iciness
+    }
+
 	private void PointScored() {
 		perRoundSpeedup = 1f;
 		perGameSpeedup *= 1.03f;
 
-		flamin = icy = false;
+		flamin = false;
 
         FindObjectOfType<ScreenShaker>().ShakeScreen(0.7f);
 	}
@@ -163,24 +166,32 @@ public class BallScript : MonoBehaviour {
 		visibleSprite.transform.rotation = Quaternion.AngleAxis(Mathf.Rad2Deg * angle, Vector3.forward);
 
 		if (ghost) {
-			visibleSprite.GetComponent<SpriteRenderer>().color = PowerupInfo.GHOST_COLOR;
-			buttParticles.startColor = PowerupInfo.GHOST_COLOR;
+            var currColor = visibleSprite.GetComponent<SpriteRenderer>().color;
+            currColor.a = PowerupInfo.GHOST_COLOR;
+            visibleSprite.GetComponent<SpriteRenderer>().color = currColor;
+            buttParticles.startColor = currColor;
 		}
 		else if (flamin) { // flames > ice.  They're "cooler" ahahaha
 			visibleSprite.GetComponent<SpriteRenderer>().color = Color.red;
 			buttParticles.startColor = Color.red;
-		}
-		else if (icy) {
-			visibleSprite.GetComponent<SpriteRenderer>().color = Color.blue;
-			buttParticles.startColor = Color.blue;
 		}
 		else {
 			visibleSprite.GetComponent<SpriteRenderer>().color = Color.white;
 			buttParticles.startColor = Color.white;
         }
 
+        ApplyIciness();
         GetComponent<JuicyShadow>().ghostlyShadow = ghost;
     } 
+
+    // Use the value of 'iciness' to change the ball's color
+    private void ApplyIciness() {
+        var currColor = visibleSprite.GetComponent<SpriteRenderer>().color;
+        var iceColor = Color.Lerp(currColor, Color.blue, iciness * 0.8f);
+
+        visibleSprite.GetComponent<SpriteRenderer>().color = iceColor;
+        buttParticles.startColor = iceColor;
+    }
 
 	public void OnCollisionEnter2D(Collision2D collision) {
 		if (!GameManager.ShouldUpdate()) {
@@ -206,7 +217,6 @@ public class BallScript : MonoBehaviour {
 			perRoundSpeedup *= 1.05f;
 			
 			if (flamin) { flamin = false; }
-			if (icy)    { icy = false; }
 			
 			var paddle = collision.gameObject.GetComponent<PaddleObject>();
 

@@ -19,6 +19,7 @@ public class PaddleObject : MonoBehaviour {
 
 	public bool magnetized = false;
 	public bool ghostly = false;
+    public bool icy = false;
 
     public Vector3 baseScale = Vector3.one;
     public float scaleModifier = 1f; // Used to animate the scale relative to the paddle's normal scale
@@ -27,8 +28,22 @@ public class PaddleObject : MonoBehaviour {
 
     public float targetY = 0; // The last point the user dragged to.  We'll smoothly glide there.
     
+    bool BallIsComingAtMe() {
+        return Mathf.Sign(gameManager.ballScript.direction.x) == Mathf.Sign(PADDLE_X);
+    }
+
     void LateUpdate() {
         transform.localScale = baseScale * scaleModifier;
+
+        if (icy && BallIsComingAtMe()) {
+            var diffX = Mathf.Abs(transform.position.x - gameManager.ballScript.transform.position.x);
+            var maxDiff = Constants.FIELD_WIDTH * 0.8f;
+
+            var icyFactor = 1 - diffX / maxDiff;
+            icyFactor = Mathf.Clamp(icyFactor, 0, 1);
+
+            gameManager.ballScript.iciness = Mathf.Max(gameManager.ballScript.iciness, icyFactor);
+        }
     }
 
 	void FixedUpdate () {
@@ -70,7 +85,10 @@ public class PaddleObject : MonoBehaviour {
 				gameManager.ballScript.ghost = false;
 			}
 		}
+
 	}
+
+
 
 	public void AddShield() {
 		var newShieldObject = GameObject.Instantiate(Resources.Load ("Shield")) as GameObject;
