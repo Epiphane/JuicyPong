@@ -10,8 +10,12 @@ public class Constants : MonoBehaviour {
 
 	Bounds SCREEN_SIZE;
 
+    public static bool singlePlayer;
+
 	void Awake() {
 		GameObject.DontDestroyOnLoad(this);
+
+        singlePlayer = false;
 
 		float screenAspect = (float)Screen.width / (float)Screen.height;
 		float cameraHeight = Camera.main.orthographicSize * 2;

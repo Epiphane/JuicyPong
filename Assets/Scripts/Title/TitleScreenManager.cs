@@ -21,4 +21,9 @@ public class TitleScreenManager : MonoBehaviour {
 		Application.LoadLevel("CharacterSelect");
 	}
 
+    public void StartSinglePlayer() {
+        Constants.singlePlayer = true;
+        Application.LoadLevel("CharacterSelect");
+    }
+
 }
