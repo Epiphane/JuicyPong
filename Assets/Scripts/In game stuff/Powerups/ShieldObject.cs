@@ -28,6 +28,11 @@ public class ShieldObject : MonoBehaviour {
 		if (other.tag == "Ball") {
 			owner.activeShields.Remove(this);
 			owner.TriggerShieldUpdate();
+
+            if (CharacterAbilityManager.flamingShield[owner.playerNum]) {
+                other.GetComponent<BallScript>().flamin = true;
+            }
+
 			Destroy(gameObject);
 		}
 	}

@@ -15,15 +15,21 @@ public class CharacterAbilityManager : MonoBehaviour {
 	public static float[] powerupLengthMod = new float[3] {0f, 1f, 1f};
 
 	public static float[] ballSpeedMod = new float[3] {0f, 1f, 1f};
+    public static float[] ballAccellMod = new float[3] { 0f, 1f, 1f };
 	public static float[] paddleSizeMod = new float[3] {0f, 1.5f, 1.5f};
 
+    /** Powerup Modifiers **/
 	public static bool[] coinMagnetEnabled = new bool[3] {false, false, false};
-	public static float[] moreMagnets = new float[3] {0f, 1f, 1f};
+    public static bool[] flamingShield = new bool[3] { false, false, false };
+    public static bool[] wildFireballs = new bool[3] { false, false, false };
+
+    /** Powerup Chance Modifiers **/
+    public static float[] moreMagnets = new float[3] {0f, 1f, 1f};
 
 	public static float[] autoShieldChance = new float[3] {0f, 0f, 0f};
 
 	// Reset abilities between matches
-	public static void ResetChoices() {
+	public static void ResetAbilities() {
 		powerupProgressMod = new float[3] {0f, 1f, 1f};
 		powerupLengthMod = new float[3] {0f, 1f, 1f};
 		

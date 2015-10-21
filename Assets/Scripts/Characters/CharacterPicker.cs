@@ -1,9 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.EventSystems;
 
 public class CharacterPicker : MonoBehaviour {
 	private bool[] chosen = new bool[3];
 	private int[] selectedChar = new int[3];
+
+    public void Awake() {
+        
+    }
 
 	// Character was selected!  If both players have chosen, start the game.
 	public void PlayerChoseCharacter(int whoChose, int characterIndex) {
@@ -20,4 +25,6 @@ public class CharacterPicker : MonoBehaviour {
 			Application.LoadLevel ("GameplayScene");
 		}
 	}
+
+
 }

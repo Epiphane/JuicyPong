@@ -209,18 +209,22 @@ public class BallScript : MonoBehaviour {
 			}
 			animator.SetTrigger("BallHitCeiling");
 			direction.y *= -1;
+
+            if (flamin && CharacterAbilityManager.wildFireballs[lastHitPlayer.playerNum]) {
+                direction.x += Random.Range(-0.5f, 0.5f);
+            }
 		}
 		
 		// HIT PADDLE
 		if (collision.gameObject.tag == "Player") {
-
-			perRoundSpeedup *= 1.05f;
 			
 			if (flamin) { flamin = false; }
 			
 			var paddle = collision.gameObject.GetComponent<PaddleObject>();
 
-			direction.x *= -1;
+            perRoundSpeedup *= 1.05f * CharacterAbilityManager.ballAccellMod[paddle.playerNum];
+
+            direction.x *= -1;
 			lastHitPlayer = paddle;
 			paddle.HitBall();
 			
