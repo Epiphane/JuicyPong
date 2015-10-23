@@ -42,6 +42,8 @@ public class BallScript : MonoBehaviour {
 
     public GameObject impactParticles;
 
+    private Collider2D topCeiling, bottomCeiling;
+
 	// Make sure ball doesn't bounce at too steep of an angle, that's annoying
 	public Vector3 LimitAngle(Vector3 angleDirection) {
 		if (Mathf.Abs(angleDirection.x) < Mathf.Abs(angleDirection.y)) {
@@ -56,15 +58,18 @@ public class BallScript : MonoBehaviour {
 		direction.Normalize();
 	}
 
-	public void Start () {
-		direction = new Vector2(Random.value * 6f - 5f, Random.value - 0.5f);
-		animator = GetComponent<Animator> ();
-		
-		NormalizeDirection();
-		
-		transform.position = new Vector3(0, 0, -10);
-		visibleSprite = transform.Find("ballSprite").gameObject;
-	}
+    public void Start() {
+        direction = new Vector2(Random.value * 6f - 5f, Random.value - 0.5f);
+        animator = GetComponent<Animator>();
+
+        NormalizeDirection();
+
+        transform.position = new Vector3(0, 0, -10);
+        visibleSprite = transform.Find("ballSprite").gameObject;
+
+        topCeiling = GameObject.Find("TopCeiling").GetComponent<BoxCollider2D>();
+        bottomCeiling = GameObject.Find("BottomCeiling").GetComponent<BoxCollider2D>();
+    }
 
 
     // Check if hit walls
@@ -110,6 +115,10 @@ public class BallScript : MonoBehaviour {
         }
         else {
             transform.position += direction * Time.deltaTime * currSpeed;
+        }
+
+        if (topCeiling.IsTouching(GetComponent<BoxCollider2D>()) || bottomCeiling.IsTouching(GetComponent<BoxCollider2D>())) {
+            direction.y *= -1; // Get out of the ceiling stupid ball, you don't belong there
         }
 
         // Hit score-zoooone
