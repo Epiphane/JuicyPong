@@ -98,7 +98,6 @@ public class PowerupManager : MonoBehaviour {
             break;
         case PowerupType.Ghost:
 			player.ghostly = false;
-			ballHandle.ghost = false;
 			break;
 		}
 	}

@@ -9,7 +9,7 @@ public class JuicyShadow : MonoBehaviour {
     private Shader guiTextShader;
 
     public bool ghostlyShadow; // True if we're the shadow of a ghost so we need to get transparent
-    private Color normalColor; // The color to reset back to when we're not a ghost
+    public static Color normalColor; // The color to reset back to when we're not a ghost
 
 	// Use this for initialization
 	void Start () {
@@ -33,14 +33,6 @@ public class JuicyShadow : MonoBehaviour {
         var shadowXOffset = transform.position.x / Constants.FIELD_WIDTH_2;
         shadow.transform.localPosition = new Vector3(shadowElevation / transform.localScale.x * shadowXOffset,
                                                     -shadowElevation / transform.localScale.y, 0);
-
-        if (ghostlyShadow) {
-            var currColor = shadow.GetComponent<SpriteRenderer>().color;
-            currColor.a = PowerupInfo.GHOST_COLOR;
-            shadow.GetComponent<SpriteRenderer>().color = currColor;
-        }
-        else {
-            shadow.GetComponent<SpriteRenderer>().color = normalColor;
-        }
+       
     }
 }

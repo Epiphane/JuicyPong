@@ -15,6 +15,10 @@ public class BallScript : MonoBehaviour {
 	}
 	public float baseSpeed;
 
+    // Stop annoying glitch where it can get stuck in a wall
+    private float BASE_BOUNCE_COOLDOWN = 1.0f;
+    private float bounceCooldown = 0.0f;
+
 	// Speeds up the ball as the entire game progresses
 	private float perGameSpeedup = 1f;
 	// Speeds up the ball per POINT played
@@ -32,11 +36,10 @@ public class BallScript : MonoBehaviour {
 
 	private GameObject visibleSprite;
 
-	public bool ghost = false;
 	public bool flamin = false;
     public float iciness = 0.0f; // 0-1 how icy the ball is. 1 is fully blue + speed cut in half
+    public float ghostliness = 0.0f; // 0-1 how invisible the ball is.
 
-    // Farticles (lol farts)
     public GameObject impactParticles;
 
 	// Make sure ball doesn't bounce at too steep of an angle, that's annoying
@@ -64,75 +67,89 @@ public class BallScript : MonoBehaviour {
 	}
 
 
-	// Check if hit walls
-	public void FixedUpdate () {
-		if (!GameManager.ShouldUpdate()) {
-			buttParticles.Stop();
-			return;
-		}
-		else {
-			if (!buttParticles.isPlaying) {
-				buttParticles.Play ();
-			}
-		}
+    // Check if hit walls
+    public void FixedUpdate() {
+        if (!GameManager.ShouldUpdate()) {
+            buttParticles.Stop();
+            return;
+        }
+        else {
+            bounceCooldown -= Time.deltaTime;
+            if (!buttParticles.isPlaying) {
+                buttParticles.Play();
+            }
+        }
 
-		// Upgrade to magnet paddle makes ball attract coins - do that here
-		if (lastHitPlayer && lastHitPlayer.magnetized && CharacterAbilityManager.coinMagnetEnabled[lastHitPlayer.playerNum]) {
-			CoinManager coins = (CoinManager)(FindObjectOfType(typeof(CoinManager)));
-			foreach (GameObject coin in coins.currentCoins) {
-				var distance = Vector3.Distance(coin.transform.position, transform.position);
+        // Upgrade to magnet paddle makes ball attract coins - do that here
+        if (lastHitPlayer && lastHitPlayer.magnetized && CharacterAbilityManager.coinMagnetEnabled[lastHitPlayer.playerNum]) {
+            CoinManager coins = (CoinManager)(FindObjectOfType(typeof(CoinManager)));
+            foreach (GameObject coin in coins.currentCoins) {
+                var distance = Vector3.Distance(coin.transform.position, transform.position);
 
-				if (distance < 3) {
-					var influence = 3/(distance + 0.1f) * 0.01f;
-					var diff = transform.position - coin.transform.position;
+                if (distance < 3) {
+                    var influence = 3 / (distance + 0.1f) * 0.01f;
+                    var diff = transform.position - coin.transform.position;
 
-					coin.transform.position += diff * influence;
-				}
-			}
-		}
+                    coin.transform.position += diff * influence;
+                }
+            }
+        }
 
-		// Release all pending particles
-		foreach (var particle in pendingParticles) {
-			particle.Play();
-			animator.SetTrigger("BallHitPaddle");
-		}
+        // Release all pending particles
+        foreach (var particle in pendingParticles) {
+            particle.Play();
+            animator.SetTrigger("BallHitPaddle");
+        }
 
-		pendingParticles.Clear();
+        pendingParticles.Clear();
 
         var currSpeed = speed - speed * PowerupInfo.ICEBALL_SPEED_MULT * iciness;
 
-		if (flamin) { // flames > ice.  They're "cooler" ahahaha
-			transform.position += direction * Time.deltaTime * currSpeed * PowerupInfo.FIREBALL_SPEED_MULT;
-		}
-		else {
-			transform.position += direction * Time.deltaTime * currSpeed;
-		}
+        if (flamin) { // flames > ice.  They're "cooler" ahahaha
+            transform.position += direction * Time.deltaTime * currSpeed * PowerupInfo.FIREBALL_SPEED_MULT;
+        }
+        else {
+            transform.position += direction * Time.deltaTime * currSpeed;
+        }
 
-		// Hit score-zoooone
-		if (transform.position.x < -Constants.FIELD_WIDTH_2) {
-			if (Random.value < CharacterAbilityManager.autoShieldChance[1]) {
-				direction.x *= -1;
-				print ("AUTO SHIIIEEEEELLLLLD");
-			}
-			else {
-				scoreManager.GetPoint(2);  // get in the zooone
-				PointScored();
-			}
-		}
-		else if (transform.position.x > Constants.FIELD_WIDTH_2) {
-			if (Random.value < CharacterAbilityManager.autoShieldChance[2]) {
-				direction.x *= -1;
-				print ("AUTO SHIIIEEEEELLLLLD");
-			}
-			else {
-				scoreManager.GetPoint(1);  // scoooore-o zooooone
-				PointScored();
-			}
-		}
-	}
+        // Hit score-zoooone
+        if (transform.position.x < -Constants.FIELD_WIDTH_2) {
+            if (Random.value < CharacterAbilityManager.autoShieldChance[1]) {
+                direction.x *= -1;
+                print("AUTO SHIIIEEEEELLLLLD");
+            }
+            else {
+                scoreManager.GetPoint(2);  // get in the zooone
+                PointScored();
+            }
+        }
+        else if (transform.position.x > Constants.FIELD_WIDTH_2) {
+            if (Random.value < CharacterAbilityManager.autoShieldChance[2]) {
+                direction.x *= -1;
+                print("AUTO SHIIIEEEEELLLLLD");
+            }
+            else {
+                scoreManager.GetPoint(1);  // scoooore-o zooooone
+                PointScored();
+            }
+        }
+
+        // Get back in the field plz!
+        var ballPos = transform.position;
+        if (transform.position.y < -Constants.FIELD_HEIGHT_2) {
+            ballPos.y = -Constants.FIELD_HEIGHT_2;
+            transform.position = ballPos;
+        }
+
+        if (transform.position.y > Constants.FIELD_HEIGHT_2) {
+            ballPos.y = Constants.FIELD_HEIGHT_2;
+            transform.position = ballPos;
+        }
+    }
 
     public void Update() {
         iciness = 0; // Reset in case a paddle ended its iciness
+        ghostliness = 0; // Same for ghostliness
     }
 
 	private void PointScored() {
@@ -165,23 +182,15 @@ public class BallScript : MonoBehaviour {
 		var angle = Mathf.Atan2(direction.y, direction.x);
 		visibleSprite.transform.rotation = Quaternion.AngleAxis(Mathf.Rad2Deg * angle, Vector3.forward);
 
-		if (ghost) {
-            var currColor = visibleSprite.GetComponent<SpriteRenderer>().color;
-            currColor.a = PowerupInfo.GHOST_COLOR;
-            visibleSprite.GetComponent<SpriteRenderer>().color = currColor;
-            buttParticles.startColor = currColor;
-		}
-		else if (flamin) { // flames > ice.  They're "cooler" ahahaha
-			visibleSprite.GetComponent<SpriteRenderer>().color = Color.red;
-			buttParticles.startColor = Color.red;
+		if (flamin) {
+            SetColor(Color.red);
 		}
 		else {
-			visibleSprite.GetComponent<SpriteRenderer>().color = Color.white;
-			buttParticles.startColor = Color.white;
+            SetColor(Color.white); // Baseline is white, if not flamin'
         }
 
         ApplyIciness();
-        GetComponent<JuicyShadow>().ghostlyShadow = ghost;
+        ApplyGhostliness();
     } 
 
     // Use the value of 'iciness' to change the ball's color
@@ -189,18 +198,37 @@ public class BallScript : MonoBehaviour {
         var currColor = visibleSprite.GetComponent<SpriteRenderer>().color;
         var iceColor = Color.Lerp(currColor, Color.blue, iciness * 0.8f);
 
-        visibleSprite.GetComponent<SpriteRenderer>().color = iceColor;
-        buttParticles.startColor = iceColor;
+        SetColor(iceColor);
     }
 
-	public void OnCollisionEnter2D(Collision2D collision) {
+    // Use the value of 'ghostliness' to change the ball's color
+    private void ApplyGhostliness() {
+        var currColor = visibleSprite.GetComponent<SpriteRenderer>().color;
+        var ghostColor = Color.Lerp(currColor, PowerupInfo.GHOST_COLOR, ghostliness);
+
+        SetColor(ghostColor);
+    }
+
+    // Sets the color, also correcting the particle and shadow color.
+    public void SetColor(Color newColor) {
+        visibleSprite.GetComponent<SpriteRenderer>().color = newColor;
+        buttParticles.startColor = newColor;
+
+        var shadowRenderer = GetComponent<JuicyShadow>().shadow.GetComponent<SpriteRenderer>();
+        var shadowColor = shadowRenderer.color;
+        shadowColor.a = Mathf.Min(newColor.a, JuicyShadow.normalColor.a);
+        shadowRenderer.color = shadowColor;
+    }
+
+    public void OnCollisionEnter2D(Collision2D collision) {
 		if (!GameManager.ShouldUpdate()) {
 			return;
 		}
 
-
 		// HIT CEILING
-		if (collision.gameObject.tag == "Ceiling") {
+		if (collision.gameObject.tag == "Ceiling" && bounceCooldown <= 0) {
+            bounceCooldown = BASE_BOUNCE_COOLDOWN;
+
 			foreach (ContactPoint2D contact in collision.contacts) {
 				var particles = Instantiate (impactParticles, contact.point, Quaternion.identity) as GameObject;
 				var angle = Mathf.Atan2(contact.normal.x, contact.normal.y);

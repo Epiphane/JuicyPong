@@ -35,14 +35,18 @@ public class PaddleObject : MonoBehaviour {
     void LateUpdate() {
         transform.localScale = baseScale * scaleModifier;
 
+        var diffX = Mathf.Abs(transform.position.x - gameManager.ballScript.transform.position.x);
+        var maxDiff = Constants.FIELD_WIDTH * 0.8f;
+
+        var differenceFactor = diffX / maxDiff;
+        differenceFactor = Mathf.Clamp(differenceFactor, 0, 1);
+
         if (icy && BallIsComingAtMe()) {
-            var diffX = Mathf.Abs(transform.position.x - gameManager.ballScript.transform.position.x);
-            var maxDiff = Constants.FIELD_WIDTH * 0.8f;
+            gameManager.ballScript.iciness = Mathf.Max(gameManager.ballScript.iciness, 1 - differenceFactor);
+        }
 
-            var icyFactor = 1 - diffX / maxDiff;
-            icyFactor = Mathf.Clamp(icyFactor, 0, 1);
-
-            gameManager.ballScript.iciness = Mathf.Max(gameManager.ballScript.iciness, icyFactor);
+        if (ghostly && !BallIsComingAtMe()) {
+            gameManager.ballScript.ghostliness = Mathf.Max(gameManager.ballScript.ghostliness, differenceFactor + 0.13f);
         }
     }
 
@@ -71,21 +75,12 @@ public class PaddleObject : MonoBehaviour {
 		}
 
 		if (magnetized) {
-			var diffX = Mathf.Abs(transform.position.x - gameManager.ballScript.transform.position.x) * 0.8f;
-			var influence = Mathf.Pow ((1 - diffX / Constants.FIELD_WIDTH - 0.2f), 10f) * 4.8f;
+            var diffY = transform.position.y - gameManager.ballScript.transform.position.y;
+            var diffX = Mathf.Abs(transform.position.x - gameManager.ballScript.transform.position.x) * 0.8f;
+            var influence = Mathf.Pow((1 - diffX / Constants.FIELD_WIDTH), 4f) * 0.1f;
 
-			gameManager.ballScript.MagnetTowardsPoint(transform.position, influence);
-		}
-
-		if (ghostly) {
-			if (Mathf.Sign (gameManager.ballScript.transform.position.x) != Mathf.Sign (transform.position.x)) {
-				gameManager.ballScript.ghost = true;
-			}
-			else {
-				gameManager.ballScript.ghost = false;
-			}
-		}
-
+            gameManager.ballScript.transform.Translate(new Vector3(0f, diffY * influence, 0f));
+        }
 	}
 
 
